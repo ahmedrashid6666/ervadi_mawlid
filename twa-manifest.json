@@ -1,0 +1,43 @@
+{
+  "packageId": "in.mawlid.ervadi",
+  "host": "mawlid.rashidirfany.com",
+  "name": "Ervadi Mawlid مولد شهداء يرود",
+  "launcherName": "Mawlid",
+  "display": "standalone",
+  "themeColor": "#026000",
+  "navigationColor": "#000000",
+  "navigationColorDark": "#000000",
+  "navigationDividerColor": "#000000",
+  "navigationDividerColorDark": "#000000",
+  "backgroundColor": "#026000",
+  "enableNotifications": true,
+  "startUrl": "//",
+  "iconUrl": "https://mawlid.rashidirfany.com//icons/Icon-512.png",
+  "maskableIconUrl": "https://mawlid.rashidirfany.com//icons/Icon-maskable-512.png",
+  "monochromeIconUrl": "https://mawlid.rashidirfany.com//icons/Icon-48.png",
+  "splashScreenFadeOutDuration": 300,
+  "signingKey": {
+    "path": "D:\\copying\\ervadi\\android.keystore",
+    "alias": "mawlid"
+  },
+  "appVersionName": "1",
+  "appVersionCode": 1,
+  "shortcuts": [],
+  "generatorApp": "bubblewrap-cli",
+  "webManifestUrl": "https://mawlid.rashidirfany.com//manifest.json",
+  "fallbackType": "customtabs",
+  "features": {},
+  "alphaDependencies": {
+    "enabled": false
+  },
+  "enableSiteSettingsShortcut": true,
+  "isChromeOSOnly": false,
+  "isMetaQuest": false,
+  "fullScopeUrl": "https://mawlid.rashidirfany.com//",
+  "minSdkVersion": 19,
+  "orientation": "portrait-primary",
+  "fingerprints": [],
+  "additionalTrustedOrigins": [],
+  "retainedBundles": [],
+  "appVersion": "1"
+}

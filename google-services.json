@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "62825429223",
+    "project_id": "ervadi-mawlid",
+    "storage_bucket": "ervadi-mawlid.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:62825429223:android:d0d21ef8814aa239154a42",
+        "android_client_info": {
+          "package_name": "in.mawlid.ervadi"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "62825429223-o6f1m8hcvnoqi6gqq00tdpcnv6g1bncq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCSwXpN9pyEZGQ4D66zPvDzxKeTzjeabd0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "62825429223-o6f1m8hcvnoqi6gqq00tdpcnv6g1bncq.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

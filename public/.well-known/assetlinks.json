@@ -1,0 +1,5 @@
+[{
+  "relation": ["delegate_permission/common.handle_all_urls"],
+  "target" : { "namespace": "android_app", "package_name": "in.mawlid.ervadi",
+               "sha256_cert_fingerprints": ["F7:4B:4D:29:14:E9:94:93:83:6D:CE:2A:22:4C:D8:60:77:57:8C:23:F2:D0:CB:66:EA:28:E3:52:02:7F:F6:2C"] }
+}]
