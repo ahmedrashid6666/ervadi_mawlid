@@ -191,7 +191,7 @@ class NearestDargas extends StatelessWidget {
       appBar: AppBar(
         title: Text(
           'Nearest Dargas',
-          style: theme.textTheme.titleMedium?.copyWith(
+          style: (theme.textTheme.titleMedium ?? TextStyle()).copyWith(
             color: theme.brightness == Brightness.dark ? white : white,
           ),
         ),
@@ -366,7 +366,7 @@ class NearestDargas extends StatelessWidget {
                       builder: (context, constraints) {
                         return Text(
                           darga.name,
-                          style: theme.textTheme.titleMedium?.copyWith(
+                          style: (theme.textTheme.titleMedium ?? TextStyle()).copyWith(
                             fontSize: screenWidth * 0.03,
                             fontWeight: FontWeight.bold,
                             color: isDark ? white : theme.colorScheme.primary,
@@ -387,7 +387,7 @@ class NearestDargas extends StatelessWidget {
                         Expanded(
                           child: Text(
                             '${darga.distance} - ${darga.details}',
-                            style: theme.textTheme.titleSmall?.copyWith(
+                            style: (theme.textTheme.titleSmall ?? TextStyle()).copyWith(
                               fontSize: screenWidth * 0.03,
                               color: isDark
                                   ? ltWhite
@@ -518,8 +518,8 @@ class NearestDargas extends StatelessWidget {
                                           ),
                                           child: Text(
                                             name,
-                                            style: theme.textTheme.titleSmall
-                                                ?.copyWith(
+                                            style: (theme.textTheme.titleSmall ?? TextStyle())
+                                                .copyWith(
                                               color: isHighlight
                                                   ? (isDark
                                                       ? amber
@@ -605,8 +605,8 @@ class NearestDargas extends StatelessWidget {
                                         Expanded(
                                           child: Text(
                                             '${darga.name} (${darga.distance})',
-                                            style: theme.textTheme.titleSmall
-                                                ?.copyWith(
+                                            style: (theme.textTheme.titleSmall ?? TextStyle())
+                                                .copyWith(
                                               fontWeight: FontWeight.bold,
                                               fontSize: screenWidth * 0.035,
                                               color: isDark

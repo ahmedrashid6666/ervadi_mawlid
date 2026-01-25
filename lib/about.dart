@@ -7,6 +7,7 @@ import 'module/assets.dart';
 class AboutPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final isDarkTheme = Theme.of(context).brightness == Brightness.dark;
     return Scaffold(
       backgroundColor: Theme.of(context).primaryColorDark,
       appBar: AppBar(
@@ -27,7 +28,7 @@ class AboutPage extends StatelessWidget {
               height: MediaQuery.of(context).size.height / 2,
               child: SvgPicture.asset(
                 sulthaniyyalogo,
-                color: darkMode ? white : white,
+                color: isDarkTheme ? white : white,
                 fit: BoxFit.cover,
               ),
             ),
@@ -59,7 +60,7 @@ class AboutPage extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 20,
                       height: 1.5,
-                      color: darkMode ? white : ltWhite,
+                      color: isDarkTheme ? white : ltWhite,
                     ),
                     textDirection: TextDirection.ltr,
                   ),

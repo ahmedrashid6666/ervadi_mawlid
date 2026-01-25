@@ -58,11 +58,13 @@ class _ExpandableFABState extends State<ExpandableFAB>
 
     // Define colors based on your theme
     final fabBackgroundColor = isDarkTheme
-        ? const Color(0xFF282828) // Dark theme primary
-        : const Color(0xff074425); // Light theme primary
+        ? const Color(
+            0xFF282828) // Dark theme color (matching ThemeProvider dark primaryColor)
+        : const Color(
+            0xff074425); // Light theme color (matching ThemeProvider light primaryColor)
 
     final iconColor = isDarkTheme
-        ? Colors.amber // Your amber color for dark theme
+        ? Colors.amber // Amber for dark theme
         : Colors.white; // White for light theme
 
     return SingleChildScrollView(

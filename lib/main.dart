@@ -1,4 +1,5 @@
 import 'package:ervadi/module/assets.dart';
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ervadi/tab_bar_page.dart';
@@ -11,19 +12,18 @@ import 'package:upgrader/upgrader.dart'; // ✅ Added
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   FontSize fontSizeProvider = FontSize();
-  fontSizeProvider.loadFontSize();
-  SharedPreferences.getInstance().then((prefs) {
-    var isDarkTheme = prefs.getBool("darkTheme") ?? false;
+  await fontSizeProvider.loadFontSize();
+  final prefs = await SharedPreferences.getInstance();
+  final isDarkTheme = prefs.getBool("darkTheme") ?? false;
 
-    return runApp(
-      ChangeNotifierProvider<ThemeProvider>(
-        child: MyApp(),
-        create: (BuildContext context) {
-          return ThemeProvider(isDarkTheme);
-        },
-      ),
-    );
-  });
+  runApp(
+    ChangeNotifierProvider<ThemeProvider>(
+      child: const MyApp(),
+      create: (BuildContext context) {
+        return ThemeProvider(isDarkTheme);
+      },
+    ),
+  );
 }
 
 class MyApp extends StatefulWidget {
@@ -42,6 +42,9 @@ class _MyAppState extends State<MyApp> {
         builder: (context, value, child) {
           return GetMaterialApp(
             debugShowCheckedModeBanner: false,
+            scrollBehavior: const MaterialScrollBehavior().copyWith(
+              dragDevices: PointerDeviceKind.values.toSet(),
+            ),
             title: 'Ervadi Mawlid',
             theme: value.getTheme(),
             home: UpgradeAlert(

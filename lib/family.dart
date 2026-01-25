@@ -183,7 +183,7 @@ class _ErvadiShaheeedFamilyTreeState extends State<ErvadiShaheeedFamilyTree>
           children: [
             Text(
               'Family Lineage',
-              style: theme.textTheme.titleMedium?.copyWith(
+              style: (theme.textTheme.titleMedium ?? TextStyle()).copyWith(
                 color: white,
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
@@ -448,7 +448,7 @@ class _ErvadiShaheeedFamilyTreeState extends State<ErvadiShaheeedFamilyTree>
                     const SizedBox(width: 8),
                     Text(
                       'About This Lineage',
-                      style: theme.textTheme.titleMedium?.copyWith(
+                      style: (theme.textTheme.titleMedium ?? TextStyle()).copyWith(
                         fontWeight: FontWeight.bold,
                       ),
                     ),

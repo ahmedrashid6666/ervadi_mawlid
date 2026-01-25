@@ -40,7 +40,7 @@ class FontSize with ChangeNotifier {
 }
 
 class tabsBarPage extends StatefulWidget {
-  bool darkMode;
+  bool isDarkTheme;
   int selectedpage;
   double textSize;
   bool transbutton;
@@ -51,7 +51,7 @@ class tabsBarPage extends StatefulWidget {
     required this.selectedpage,
     required this.showTranslationNotifier,
     this.textSize = 15,
-    this.darkMode = false,
+    this.isDarkTheme = false,
     this.transbutton = false,
   });
 
@@ -127,56 +127,56 @@ class _tabsBarPageState extends State<tabsBarPage>
         tabs: [
           Tab(
               child: IconWithText(
-            darkmode: widget.darkMode,
+            isDarkTheme: widget.isDarkTheme,
             no: '١',
             img: nmbrborder,
             tabtext: 'مُرَادِي بَيت',
           )),
           Tab(
               child: IconWithText(
-            darkmode: widget.darkMode,
+            isDarkTheme: widget.isDarkTheme,
             no: '٢',
             img: nmbrborder,
             tabtext: 'أَيَا مَحْبُوب',
           )),
           Tab(
               child: IconWithText(
-            darkmode: widget.darkMode,
+            isDarkTheme: widget.isDarkTheme,
             no: '٣',
             img: nmbrborder,
             tabtext: 'يٰا وَلِي سَلَامْ عَلَيْكُم',
           )),
           Tab(
               child: IconWithText(
-            darkmode: widget.darkMode,
+            isDarkTheme: widget.isDarkTheme,
             no: '٤',
             img: nmbrborder,
             tabtext: 'أَيٰا سٰامِي لَدَى الْقٰادِرْ',
           )),
           Tab(
               child: IconWithText(
-            darkmode: widget.darkMode,
+            isDarkTheme: widget.isDarkTheme,
             no: '٥',
             img: nmbrborder,
             tabtext: 'عَبَّاسْ مَنْترِي بَيت',
           )),
           Tab(
               child: IconWithText(
-            darkmode: widget.darkMode,
+            isDarkTheme: widget.isDarkTheme,
             no: '٦',
             img: nmbrborder,
             tabtext: 'صَلٰوةٌ وَتَسْلِيمٌ',
           )),
           Tab(
               child: IconWithText(
-            darkmode: widget.darkMode,
+            isDarkTheme: widget.isDarkTheme,
             no: '٧',
             img: nmbrborder,
             tabtext: 'دُعــــآء',
           )),
           Tab(
               child: IconWithText(
-            darkmode: widget.darkMode,
+            isDarkTheme: widget.isDarkTheme,
             no: '٨',
             img: nmbrborder,
             tabtext: 'يَا أَكْرَمَ الْخَلْقِ',
@@ -185,7 +185,7 @@ class _tabsBarPageState extends State<tabsBarPage>
               child: Padding(
             padding: const EdgeInsets.only(left: 8),
             child: IconWithText(
-              darkmode: widget.darkMode,
+              isDarkTheme: widget.isDarkTheme,
               line: false,
               no: '٩',
               img: nmbrborder,
@@ -378,7 +378,7 @@ class _tabsBarPageState extends State<tabsBarPage>
                       icon: SvgPicture.asset(
                         fontsz,
                         height: 24,
-                        color: widget.darkMode ? white : ltWhite,
+                        color: widget.isDarkTheme ? white : ltWhite,
                         fit: BoxFit.fitHeight,
                       ),
                       onPressed: () {
@@ -388,8 +388,8 @@ class _tabsBarPageState extends State<tabsBarPage>
                           context: context,
                           builder: (BuildContext context) {
                             return BottomModalSheet(
-                              radiobtndark: widget.darkMode,
-                              darkMode: widget.darkMode,
+                              radiobtndark: widget.isDarkTheme,
+                              isDarkTheme: widget.isDarkTheme,
                               fontsize: fontSize._fontSize,
                               onChanged: (double newValue) {
                                 setState(() {
@@ -471,7 +471,7 @@ class _tabsBarPageState extends State<tabsBarPage>
                     bottom: PreferredSize(
                         preferredSize: _tabBar.preferredSize,
                         child: ColoredBox(
-                          color: widget.darkMode ? white : ltWhite,
+                          color: widget.isDarkTheme ? white : ltWhite,
                           child: _tabBar,
                         )),
                   ),
@@ -484,7 +484,7 @@ class _tabsBarPageState extends State<tabsBarPage>
                 // FIXED: Pass the correct selectedLanguage to BaithContnt
                 BaithContnt(
                   selectedLanguage: selectedLanguage,
-                  darkMode: widget.darkMode,
+                  isDarkTheme: widget.isDarkTheme,
                   baithTxt: first, // Make sure 'first' is defined
                   baithTxtTrans:
                       TranslationData.getTranslation(selectedLanguage),
@@ -496,7 +496,7 @@ class _tabsBarPageState extends State<tabsBarPage>
                 ),
                 BaithContnt(
                   selectedLanguage: selectedLanguage,
-                  darkMode: widget.darkMode,
+                  isDarkTheme: widget.isDarkTheme,
                   baithTxt: scnd,
                   baithTxtTrans: firsttrans,
                   showTranslationNotifier: showTranslationNotifier,
@@ -509,7 +509,7 @@ class _tabsBarPageState extends State<tabsBarPage>
                 ),
                 BaithContnt(
                   selectedLanguage: selectedLanguage,
-                  darkMode: widget.darkMode,
+                  isDarkTheme: widget.isDarkTheme,
                   baithTxt: thrd,
                   baithTxtTrans: firsttrans,
                   showTranslationNotifier: showTranslationNotifier,
@@ -522,7 +522,7 @@ class _tabsBarPageState extends State<tabsBarPage>
                 ),
                 BaithContnt(
                   selectedLanguage: selectedLanguage,
-                  darkMode: widget.darkMode,
+                  isDarkTheme: widget.isDarkTheme,
                   baithTxt: frth,
                   baithTxtTrans: firsttrans,
                   showTranslationNotifier: showTranslationNotifier,
@@ -535,7 +535,7 @@ class _tabsBarPageState extends State<tabsBarPage>
                 ),
                 BaithContnt(
                   selectedLanguage: selectedLanguage,
-                  darkMode: widget.darkMode,
+                  isDarkTheme: widget.isDarkTheme,
                   baithTxt: fifth,
                   baithTxtTrans: firsttrans,
                   showTranslationNotifier: showTranslationNotifier,
@@ -548,7 +548,7 @@ class _tabsBarPageState extends State<tabsBarPage>
                 ),
                 BaithContnt(
                   selectedLanguage: selectedLanguage,
-                  darkMode: widget.darkMode,
+                  isDarkTheme: widget.isDarkTheme,
                   baithTxt: sixth,
                   baithTxtTrans: firsttrans,
                   showTranslationNotifier: showTranslationNotifier,
@@ -561,7 +561,7 @@ class _tabsBarPageState extends State<tabsBarPage>
                 ),
                 BaithContnt(
                   selectedLanguage: selectedLanguage,
-                  darkMode: widget.darkMode,
+                  isDarkTheme: widget.isDarkTheme,
                   baithTxt: aameen,
                   baithTxtTrans: firsttrans,
                   showTranslationNotifier: showTranslationNotifier,
@@ -574,7 +574,7 @@ class _tabsBarPageState extends State<tabsBarPage>
                 ),
                 BaithContnt(
                   selectedLanguage: selectedLanguage,
-                  darkMode: widget.darkMode,
+                  isDarkTheme: widget.isDarkTheme,
                   baithTxt: yaAkrama,
                   baithTxtTrans: firsttrans,
                   showTranslationNotifier: showTranslationNotifier,
@@ -587,7 +587,7 @@ class _tabsBarPageState extends State<tabsBarPage>
                 ),
                 BaithContnt(
                   selectedLanguage: selectedLanguage,
-                  darkMode: widget.darkMode,
+                  isDarkTheme: widget.isDarkTheme,
                   baithTxt: kundoor,
                   baithTxtTrans: firsttrans,
                   showTranslationNotifier: showTranslationNotifier,
@@ -608,7 +608,7 @@ class _tabsBarPageState extends State<tabsBarPage>
 }
 
 class BottomModalSheet extends StatefulWidget {
-  final bool darkMode;
+  final bool isDarkTheme;
   final bool radiobtndark;
   final double fontsize;
   final ValueChanged<double> onChanged;
@@ -616,7 +616,7 @@ class BottomModalSheet extends StatefulWidget {
   BottomModalSheet({
     required this.radiobtndark,
     required this.fontsize,
-    required this.darkMode,
+    required this.isDarkTheme,
     required this.onChanged,
   });
 
@@ -644,7 +644,7 @@ class _BottomModalSheetState extends State<BottomModalSheet> {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
               RadioBtn(
-                darkMode: widget.radiobtndark,
+                isDarkTheme: widget.radiobtndark,
               ),
               Padding(
                 padding: const EdgeInsets.only(right: 30, left: 30),
@@ -722,7 +722,7 @@ class IconWithText extends StatelessWidget {
   final String img;
   final String no;
   final String tabtext;
-  bool darkmode;
+  bool isDarkTheme;
   bool line;
 
   IconWithText(
@@ -730,7 +730,7 @@ class IconWithText extends StatelessWidget {
       required this.tabtext,
       required this.img,
       required this.no,
-      required this.darkmode});
+      required this.isDarkTheme});
 
   @override
   Widget build(BuildContext context) {
@@ -756,7 +756,7 @@ class IconWithText extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 19,
                         fontFamily: 'lpmq',
-                        color: darkmode ? white : ltWhite,
+                        color: isDarkTheme ? white : ltWhite,
                       ),
                     ),
                   )
@@ -800,7 +800,7 @@ class IconWithText extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 19,
                       fontFamily: 'lpmq',
-                      color: darkmode ? white : ltWhite,
+                      color: isDarkTheme ? white : ltWhite,
                     ),
                   ),
                 )
@@ -830,7 +830,7 @@ class IconWithText extends StatelessWidget {
 //       child: Stack(
 //         children: <Widget>[
 //           Tab(
-//             icon: IconWithText(darkmode: ,),
+//             icon: IconWithText(isDarkTheme: ,),
 //           ),
 //           Align(
 //             alignment: Alignment.centerRight,

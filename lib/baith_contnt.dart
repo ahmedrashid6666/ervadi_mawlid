@@ -7,7 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'module/assets.dart';
 
 class BaithContnt extends StatefulWidget {
-  bool darkMode;
+  bool isDarkTheme;
   bool transbutton;
   List<String> baithTxt;
   List<String> baithTxtTrans;
@@ -17,7 +17,7 @@ class BaithContnt extends StatefulWidget {
   Function(double) onChanged;
   BaithContnt(
       {Key? key,
-      this.darkMode = true,
+      this.isDarkTheme = true,
       required this.baithTxt,
       required this.baithTxtTrans,
       required this.selectedLanguage,
@@ -234,7 +234,7 @@ class _BaithContntState extends State<BaithContnt> {
                           height: 1,
                           thickness: 0.1,
                           color:
-                              widget.darkMode ? white : ltWhite, // <- unchanged
+                              widget.isDarkTheme ? white : ltWhite, // <- unchanged
                         )
                       ],
                     ),
@@ -359,7 +359,7 @@ class _BaithContntState extends State<BaithContnt> {
                         Divider(
                           height: 1,
                           thickness: 0.1,
-                          color: widget.darkMode ? blk : blk, // <- unchanged
+                          color: widget.isDarkTheme ? blk : blk, // <- unchanged
                         )
                       ],
                     ),

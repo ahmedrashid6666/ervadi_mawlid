@@ -5,8 +5,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'assets.dart';
 
 class RadioBtn extends StatefulWidget {
-  bool darkMode;
-  RadioBtn({@required this.darkMode = false}) : super();
+  bool isDarkTheme;
+  RadioBtn({@required this.isDarkTheme = false}) : super();
   @override
   _RadioBtnState createState() => _RadioBtnState();
 }
