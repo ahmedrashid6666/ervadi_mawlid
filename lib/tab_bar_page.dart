@@ -58,6 +58,21 @@ class tabsBarPage extends StatefulWidget {
     this.transbutton = false,
   });
 
+  static Future<void> saveScrollPosition(int index, double offset) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setDouble('baith_scroll_$index', offset);
+  }
+
+  static Future<double> loadScrollPosition(int index) async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getDouble('baith_scroll_$index') ?? 0.0;
+  }
+
+  static Future<int> getLastBaithIndex() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getInt('last_baith_index') ?? 0;
+  }
+
   @override
   State<tabsBarPage> createState() => _tabsBarPageState();
 }
@@ -92,10 +107,16 @@ class _tabsBarPageState extends State<tabsBarPage>
         });
         // Switch audio on tab change
         _loadAudioWithFeedback(_tabController.index);
+        _saveLastBaith(_tabController.index);
       }
     });
     _loadTranslationToggle();
     _loadLanguagePreference();
+  }
+
+  Future<void> _saveLastBaith(int index) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setInt('last_baith_index', index);
   }
 
   Future<void> _loadAudioWithFeedback(int index,
@@ -243,7 +264,6 @@ class _tabsBarPageState extends State<tabsBarPage>
   @override
   Widget build(BuildContext context) {
     final fontSize = Provider.of<FontSize>(context);
-    final ValueNotifier<bool> showTranslationNotifier = ValueNotifier(false);
     return DefaultTabController(
       initialIndex: widget.selectedpage,
       length: 9,
@@ -613,122 +633,96 @@ class _tabsBarPageState extends State<tabsBarPage>
             body: TabBarView(
               controller: _tabController,
               children: <Widget>[
-                // FIXED: Pass the correct selectedLanguage to BaithContnt
                 BaithContnt(
+                  baithIndex: 0,
                   selectedLanguage: selectedLanguage,
                   isDarkTheme: widget.isDarkTheme,
-                  baithTxt: first, // Make sure 'first' is defined
+                  baithTxt: first,
                   baithTxtTrans:
                       TranslationData.getTranslation(selectedLanguage),
                   transbutton: true,
                   showTranslationNotifier: widget.showTranslationNotifier,
-                  onChanged: (double value) {
-                    // Handle font size change if needed
-                  },
+                  onChanged: (double value) {},
                 ),
                 BaithContnt(
+                  baithIndex: 1,
                   selectedLanguage: selectedLanguage,
                   isDarkTheme: widget.isDarkTheme,
                   baithTxt: scnd,
                   baithTxtTrans: firsttrans,
-                  showTranslationNotifier: showTranslationNotifier,
+                  showTranslationNotifier: widget.showTranslationNotifier,
                   transbutton: false,
-                  onChanged: (double newValue) {
-                    setState(() {
-                      widget.textSize = newValue;
-                    });
-                  },
+                  onChanged: (double newValue) {},
                 ),
                 BaithContnt(
+                  baithIndex: 2,
                   selectedLanguage: selectedLanguage,
                   isDarkTheme: widget.isDarkTheme,
                   baithTxt: thrd,
                   baithTxtTrans: firsttrans,
-                  showTranslationNotifier: showTranslationNotifier,
+                  showTranslationNotifier: widget.showTranslationNotifier,
                   transbutton: false,
-                  onChanged: (double newValue) {
-                    setState(() {
-                      widget.textSize = newValue;
-                    });
-                  },
+                  onChanged: (double newValue) {},
                 ),
                 BaithContnt(
+                  baithIndex: 3,
                   selectedLanguage: selectedLanguage,
                   isDarkTheme: widget.isDarkTheme,
                   baithTxt: frth,
                   baithTxtTrans: firsttrans,
-                  showTranslationNotifier: showTranslationNotifier,
+                  showTranslationNotifier: widget.showTranslationNotifier,
                   transbutton: false,
-                  onChanged: (double newValue) {
-                    setState(() {
-                      widget.textSize = newValue;
-                    });
-                  },
+                  onChanged: (double newValue) {},
                 ),
                 BaithContnt(
+                  baithIndex: 4,
                   selectedLanguage: selectedLanguage,
                   isDarkTheme: widget.isDarkTheme,
                   baithTxt: fifth,
                   baithTxtTrans: firsttrans,
-                  showTranslationNotifier: showTranslationNotifier,
+                  showTranslationNotifier: widget.showTranslationNotifier,
                   transbutton: false,
-                  onChanged: (double newValue) {
-                    setState(() {
-                      widget.textSize = newValue;
-                    });
-                  },
+                  onChanged: (double newValue) {},
                 ),
                 BaithContnt(
+                  baithIndex: 5,
                   selectedLanguage: selectedLanguage,
                   isDarkTheme: widget.isDarkTheme,
                   baithTxt: sixth,
                   baithTxtTrans: firsttrans,
-                  showTranslationNotifier: showTranslationNotifier,
+                  showTranslationNotifier: widget.showTranslationNotifier,
                   transbutton: false,
-                  onChanged: (double newValue) {
-                    setState(() {
-                      widget.textSize = newValue;
-                    });
-                  },
+                  onChanged: (double newValue) {},
                 ),
                 BaithContnt(
+                  baithIndex: 6,
                   selectedLanguage: selectedLanguage,
                   isDarkTheme: widget.isDarkTheme,
                   baithTxt: aameen,
                   baithTxtTrans: firsttrans,
-                  showTranslationNotifier: showTranslationNotifier,
+                  showTranslationNotifier: widget.showTranslationNotifier,
                   transbutton: false,
-                  onChanged: (double newValue) {
-                    setState(() {
-                      widget.textSize = newValue;
-                    });
-                  },
+                  onChanged: (double newValue) {},
                 ),
                 BaithContnt(
+                  baithIndex: 7,
                   selectedLanguage: selectedLanguage,
                   isDarkTheme: widget.isDarkTheme,
                   baithTxt: yaAkrama,
                   baithTxtTrans: firsttrans,
-                  showTranslationNotifier: showTranslationNotifier,
+                  showTranslationNotifier: widget.showTranslationNotifier,
                   transbutton: false,
-                  onChanged: (double newValue) {
-                    setState(() {
-                      widget.textSize = newValue;
-                    });
-                  },
+                  onChanged: (double newValue) {},
                 ),
                 BaithContnt(
+                  baithIndex: 8,
                   selectedLanguage: selectedLanguage,
                   isDarkTheme: widget.isDarkTheme,
                   baithTxt: kundoor,
                   baithTxtTrans: firsttrans,
-                  showTranslationNotifier: showTranslationNotifier,
+                  showTranslationNotifier: widget.showTranslationNotifier,
                   transbutton: false,
-                  onChanged: (double newValue) {
-                    setState(() {
-                      widget.textSize = newValue;
-                    });
-                  },
+                  onChanged: (double newValue) {},
                 ),
               ],
             ),
@@ -771,207 +765,106 @@ class _BottomModalSheetState extends State<BottomModalSheet> {
           width: double.infinity,
           decoration: BoxDecoration(
             color: Theme.of(context).colorScheme.primary,
+            borderRadius: const BorderRadius.only(
+              topLeft: Radius.circular(30.0),
+              topRight: Radius.circular(30.0),
+            ),
           ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: <Widget>[
-              RadioBtn(
-                isDarkTheme: widget.radiobtndark,
-              ),
-              Padding(
-                padding: const EdgeInsets.only(right: 30, left: 30),
-                child: Divider(
-                  height: 1,
-                  thickness: 0.5,
-                  color: Colors.grey,
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 10),
-                child: Text(
-                  'Text Size',
+          child: Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Column(
+              children: [
+                const Text(
+                  'Font Size',
                   style: TextStyle(
+                    color: Colors.white,
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
-                    color: white,
                   ),
                 ),
-              ),
-              Row(
-                children: [
-                  Flexible(
-                      fit: FlexFit.tight,
-                      child: SliderTheme(
-                        data: SliderTheme.of(context).copyWith(
-                          thumbShape:
-                              RoundSliderThumbShape(enabledThumbRadius: 10.0),
-                          overlayShape:
-                              RoundSliderOverlayShape(overlayRadius: 20.0),
-                        ),
-                        child: Consumer<FontSize>(
-                          builder: (context, provider, child) {
-                            return Slider(
-                              value: fontSize._fontSize,
-                              activeColor: white,
-                              min: 15,
-                              max: 32,
-                              divisions: 10,
-                              onChanged: (double value) {
-                                setState(() {
-                                  fontSize._fontSize = value;
-                                });
-                                widget.onChanged(value);
-                              },
-                            );
-                          },
-                        ),
-                      )),
-                  SizedBox(
-                    height: 1,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(
-                      right: 15,
-                    ),
-                    child: Text(
-                      '${fontSize._fontSize.toInt()}  px',
-                      style: TextStyle(
-                        fontSize: 20.0,
-                        fontWeight: FontWeight.bold,
-                        color: white,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ],
+                const SizedBox(height: 20),
+                Slider(
+                  activeColor: Colors.amber,
+                  inactiveColor: Colors.amber.withOpacity(0.3),
+                  value: fontSize.fontSize,
+                  min: 15,
+                  max: 40,
+                  onChanged: (newValue) {
+                    fontSize.fontSize = newValue;
+                    widget.onChanged(newValue);
+                  },
+                ),
+                const SizedBox(height: 10),
+                Text(
+                  'Current Size: ${fontSize.fontSize.toInt()}',
+                  style: const TextStyle(color: Colors.white),
+                ),
+              ],
+            ),
           ),
         ));
   }
 }
 
 class IconWithText extends StatelessWidget {
-  final String img;
-  final String no;
-  final String tabtext;
-  bool isDarkTheme;
-  bool line;
-
-  IconWithText(
-      {this.line = true,
-      required this.tabtext,
-      required this.img,
+  const IconWithText(
+      {super.key,
+      required this.isDarkTheme,
       required this.no,
-      required this.isDarkTheme});
+      required this.img,
+      required this.tabtext,
+      this.line = true});
+
+  final bool isDarkTheme;
+  final String no;
+  final String img;
+  final String tabtext;
+  final bool line;
 
   @override
   Widget build(BuildContext context) {
-    return line
-        ? Row(
+    return Container(
+      padding: const EdgeInsets.only(top: 10, bottom: 10, right: 10),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Stack(
+            alignment: Alignment.center,
             children: [
-              Stack(
-                alignment: Alignment.center,
-                children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.only(left: 7),
-                    child: SvgPicture.asset(
-                      img,
-                      width: 30,
-                      color: Theme.of(context).primaryColor,
-                      fit: BoxFit.fitHeight,
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 7),
-                    child: Text(
-                      no,
-                      style: TextStyle(
-                        fontSize: 19,
-                        fontFamily: 'lpmq',
-                        color: isDarkTheme ? white : ltWhite,
-                      ),
-                    ),
-                  )
-                ],
+              SvgPicture.asset(
+                img,
+                height: 35,
+                color: isDarkTheme ? white : ltWhite,
               ),
               Text(
-                '${(tabtext)}',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontFamily: 'lpmq',
-                  color: blk,
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(
-                    left: 10, right: 10, top: 6, bottom: 6),
-                child: VerticalDivider(
-                  width: 1,
-                  color: Colors.grey,
-                ),
+                no,
+                style: const TextStyle(
+                    fontFamily: 'Uthmanic',
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.amber),
               ),
             ],
-          )
-        : Row(children: [
-            Stack(
-              alignment: Alignment.center,
-              children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.only(left: 7),
-                  child: SvgPicture.asset(
-                    img,
-                    width: 30,
-                    color: Theme.of(context).primaryColor,
-                    fit: BoxFit.fitHeight,
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 7),
-                  child: Text(
-                    no,
-                    style: TextStyle(
-                      fontSize: 19,
-                      fontFamily: 'lpmq',
-                      color: isDarkTheme ? white : ltWhite,
-                    ),
-                  ),
-                )
-              ],
+          ),
+          const SizedBox(width: 8),
+          Text(
+            tabtext,
+            style: TextStyle(
+              fontFamily: 'lpmq',
+              fontSize: 18,
+              color: isDarkTheme ? white : ltWhite,
             ),
-            Text(
-              '${(tabtext)}',
-              style: TextStyle(
-                fontSize: 20,
-                fontFamily: 'lpmq',
-                color: blk,
-              ),
+          ),
+          if (line) ...[
+            const SizedBox(width: 15),
+            Container(
+              height: 25,
+              width: 1,
+              color: Colors.white24,
             ),
-          ]);
+          ]
+        ],
+      ),
+    );
   }
 }
-
-// Widget _individualTab(String imagePath) {
-//   return Container(
-//       height: 50,
-//       width: double.infinity,
-//       decoration: BoxDecoration(
-//         border: Border(
-//           right: BorderSide(color: white, width: 0, style: BorderStyle.solid),
-//         ),
-//       ),
-//       child: Stack(
-//         children: <Widget>[
-//           Tab(
-//             icon: IconWithText(isDarkTheme: ,),
-//           ),
-//           Align(
-//             alignment: Alignment.centerRight,
-//             child: Container(
-//               color: mainColor,
-//               width: 1,
-//               height: 25,
-//             ),
-//           )
-//         ],
-//       ));
-// }

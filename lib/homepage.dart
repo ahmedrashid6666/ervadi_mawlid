@@ -284,6 +284,36 @@ class _MainScreenState extends State<MainScreen> {
                   // Scrollable content
                   SliverList(
                     delegate: SliverChildListDelegate([
+                      FutureBuilder<int>(
+                        future: tabsBarPage.getLastBaithIndex(),
+                        builder: (context, snapshot) {
+                          if (snapshot.hasData) {
+                            final lastIndex = snapshot.data!;
+                            // Only show if it's NOT the first page or if we want it always
+                            return Padding(
+                              padding: const EdgeInsets.only(top: 10),
+                              child: Detailed1(
+                                context,
+                                isDarkTheme,
+                                'الاستمرار في القراءة', // Continue Recitation
+                                '↻',
+                                () {
+                                  Get.to(
+                                    () => tabsBarPage(
+                                      showTranslationNotifier:
+                                          showTranslationNotifier,
+                                      isDarkTheme: isDarkTheme,
+                                      selectedpage: lastIndex,
+                                    ),
+                                    transition: Transition.fade,
+                                  );
+                                },
+                              ),
+                            );
+                          }
+                          return const SizedBox.shrink();
+                        },
+                      ),
                       Detailed1(context, isDarkTheme, 'مُرَادِي بَيت', '١', () {
                         Get.to(
                           () => tabsBarPage(
@@ -326,8 +356,9 @@ class _MainScreenState extends State<MainScreen> {
                           transition: Transition.fade,
                         );
                       }),
-                      Detailed1(context, isDarkTheme,
-                          'عَبَّاسْ مَنْترِي بَيت', '٥', () {
+                      Detailed1(
+                          context, isDarkTheme, 'عَبَّاسْ مَنْترِي بَيت', '٥',
+                          () {
                         Get.to(
                           () => tabsBarPage(
                             showTranslationNotifier: showTranslationNotifier,

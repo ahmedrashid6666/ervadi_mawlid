@@ -25,17 +25,34 @@ class AudioProvider with ChangeNotifier {
     'baith_9.mp3', // وَاهًا لِلْقُبَّةِ الْخَضْرَاءِ
   ];
 
+  // Store positions for each track
+  final Map<int, Duration> trackPositions = {};
+  int _currentTabIndex = -1;
+
   AudioProvider();
 
   Future<void> loadAudio(int tabIndex) async {
     if (tabIndex < 0 || tabIndex >= _audioFiles.length) return;
+    if (_currentTabIndex == tabIndex && _isPlayerReady) return;
+
+    // Save current position before switching
+    if (_currentTabIndex != -1 && _isPlayerReady) {
+      trackPositions[_currentTabIndex] = _audioPlayer.position;
+    }
 
     _isPlayerReady = false;
+    _currentTabIndex = tabIndex;
     notifyListeners();
 
     try {
       final url = '$audioBaseUrl${_audioFiles[tabIndex]}';
       await _audioPlayer.setUrl(url);
+
+      // Restore position if exists
+      if (trackPositions.containsKey(tabIndex)) {
+        await _audioPlayer.seek(trackPositions[tabIndex]);
+      }
+
       _isPlayerReady = true;
       notifyListeners();
     } catch (e) {
@@ -47,8 +64,20 @@ class AudioProvider with ChangeNotifier {
   }
 
   void play() => _audioPlayer.play();
-  void pause() => _audioPlayer.pause();
-  void stop() => _audioPlayer.stop();
+  void pause() {
+    _audioPlayer.pause();
+    // Save position on pause as well
+    if (_currentTabIndex != -1) {
+      trackPositions[_currentTabIndex] = _audioPlayer.position;
+    }
+  }
+
+  void stop() {
+    _audioPlayer.stop();
+    if (_currentTabIndex != -1) {
+      trackPositions[_currentTabIndex] = Duration.zero;
+    }
+  }
 
   @override
   void dispose() {

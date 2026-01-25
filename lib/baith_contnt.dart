@@ -14,6 +14,7 @@ class BaithContnt extends StatefulWidget {
   final String selectedLanguage;
   final ValueNotifier<bool> showTranslationNotifier;
 
+  final int baithIndex;
   Function(double) onChanged;
   BaithContnt(
       {Key? key,
@@ -23,6 +24,7 @@ class BaithContnt extends StatefulWidget {
       required this.selectedLanguage,
       required this.transbutton,
       required this.showTranslationNotifier,
+      required this.baithIndex,
       required this.onChanged})
       : super(key: key);
 
@@ -38,7 +40,27 @@ class _BaithContntState extends State<BaithContnt> {
   @override
   void initState() {
     _loadSpeed();
+    _restoreScrollPosition();
+    _scrollController.addListener(_onScroll);
     super.initState();
+  }
+
+  void _onScroll() {
+    if (_scrollController.hasClients) {
+      tabsBarPage.saveScrollPosition(
+          widget.baithIndex, _scrollController.offset);
+    }
+  }
+
+  Future<void> _restoreScrollPosition() async {
+    final offset = await tabsBarPage.loadScrollPosition(widget.baithIndex);
+    if (offset > 0 && mounted) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (_scrollController.hasClients) {
+          _scrollController.jumpTo(offset);
+        }
+      });
+    }
   }
 
   @override
@@ -233,8 +255,9 @@ class _BaithContntState extends State<BaithContnt> {
                         Divider(
                           height: 1,
                           thickness: 0.1,
-                          color:
-                              widget.isDarkTheme ? white : ltWhite, // <- unchanged
+                          color: widget.isDarkTheme
+                              ? white
+                              : ltWhite, // <- unchanged
                         )
                       ],
                     ),
