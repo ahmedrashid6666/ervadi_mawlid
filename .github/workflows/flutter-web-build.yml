@@ -1,0 +1,49 @@
+name: Flutter Web Build & Deploy
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+  workflow_dispatch:  # Allows manual trigger from GitHub Actions tab
+
+jobs:
+  build-and-deploy:
+    name: Build & Deploy Flutter Web App
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.16.0'  # Specify your Flutter version
+          channel: 'stable'
+      
+      - name: Get dependencies
+        run: flutter pub get
+      
+      - name: Build web app
+        run: flutter build web --no-sound-null-safety --release
+      
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: web-build
+          path: build/web/
+          retention-days: 7
+      
+      # Deploy to Hostinger via FTP (only on main/master branch)
+      - name: Deploy to Hostinger
+        if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          port: 21
+          local-dir: ./build/web/
+          server-dir: ./public_html/ervadimawlid/
+

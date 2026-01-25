@@ -22,17 +22,8 @@ import 'package:share_plus/share_plus.dart';
 //   State<HomePage> createState() => _HomePageState();
 // }
 
-bool darkMode = false;
-IconData _iconLight = Icons.wb_sunny;
-IconData _iconDark = Icons.nights_stay;
-ThemeData _lightTheme = ThemeData(
-  primarySwatch: myColor,
-  brightness: Brightness.light,
-);
-ThemeData _darkTheme = ThemeData(
-  primarySwatch: Colors.grey,
-  brightness: Brightness.dark,
-);
+// Theme variables moved to ThemeProvider
+// Removed unused global darkMode variable
 
 class MainScreen extends StatefulWidget {
   @override
@@ -40,23 +31,14 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
-  bool isDarkMode = true;
-  late SharedPreferences _prefs;
-
-  void initState() {
-    super.initState();
-    SharedPreferences.getInstance().then((prefs) {
-      setState(() {
-        _prefs = prefs;
-        darkMode = _prefs.getBool("darkMode") ?? true;
-      });
-    });
-  }
-
-  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   final ValueNotifier<bool> showTranslationNotifier = ValueNotifier(true);
   @override
   Widget build(BuildContext context) {
+    final themeProvider = Provider.of<ThemeProvider>(context);
+    final isDarkTheme =
+        themeProvider.selectedTheme.brightness == Brightness.dark;
+
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       scrollBehavior: const MaterialScrollBehavior().copyWith(
@@ -211,11 +193,6 @@ class _MainScreenState extends State<MainScreen> {
                             onPressed: () {
                               Provider.of<ThemeProvider>(context, listen: false)
                                   .swapTheme();
-                              setState(() {
-                                darkMode = !darkMode; // Add this line
-                                _prefs.setBool("darkMode",
-                                    darkMode); // Add this line to save the preference
-                              });
                             },
                             child: Icon(
                               Icons.brightness_6,
@@ -307,89 +284,87 @@ class _MainScreenState extends State<MainScreen> {
                   // Scrollable content
                   SliverList(
                     delegate: SliverChildListDelegate([
-                      Detailed1(context, darkMode ? true : false,
-                          'مُرَادِي بَيت', '١', () {
+                      Detailed1(context, isDarkTheme, 'مُرَادِي بَيت', '١', () {
                         Get.to(
                           () => tabsBarPage(
                             showTranslationNotifier: showTranslationNotifier,
-                            darkMode: darkMode,
+                            isDarkTheme: isDarkTheme,
                             selectedpage: 0,
                           ),
                         );
                       }),
-                      Detailed1(context, darkMode ? true : false,
-                          'أَيَا مَحْبُوب', '٢', () {
+                      Detailed1(context, isDarkTheme, 'أَيَا مَحْبُوب', '٢',
+                          () {
                         Get.to(
                           () => tabsBarPage(
                             showTranslationNotifier: showTranslationNotifier,
-                            darkMode: darkMode,
+                            isDarkTheme: isDarkTheme,
                             selectedpage: 1,
                           ),
                           transition: Transition.fade,
                         );
                       }),
-                      Detailed1(context, darkMode ? true : false,
+                      Detailed1(context, isDarkTheme,
                           'يٰا وَلِي سَلَامْ عَلَيْكُم', '٣', () {
                         Get.to(
                           () => tabsBarPage(
                             showTranslationNotifier: showTranslationNotifier,
-                            darkMode: darkMode,
+                            isDarkTheme: isDarkTheme,
                             selectedpage: 2,
                           ),
                           transition: Transition.fade,
                         );
                       }),
-                      Detailed1(context, darkMode ? true : false,
+                      Detailed1(context, isDarkTheme,
                           'أَيٰا سٰامِي لَدَى الْقٰادِرْ', '٤', () {
                         Get.to(
                           () => tabsBarPage(
                             showTranslationNotifier: showTranslationNotifier,
-                            darkMode: darkMode,
+                            isDarkTheme: isDarkTheme,
                             selectedpage: 3,
                           ),
                           transition: Transition.fade,
                         );
                       }),
-                      Detailed1(context, darkMode ? true : false,
+                      Detailed1(context, isDarkTheme,
                           'عَبَّاسْ مَنْترِي بَيت', '٥', () {
                         Get.to(
                           () => tabsBarPage(
                             showTranslationNotifier: showTranslationNotifier,
-                            darkMode: darkMode,
+                            isDarkTheme: isDarkTheme,
                             selectedpage: 4,
                           ),
                           transition: Transition.fade,
                         );
                       }),
-                      Detailed1(context, darkMode ? true : false,
-                          'صَلٰوةٌ وَتَسْلِيمٌ', '٦', () {
+                      Detailed1(
+                          context, isDarkTheme, 'صَلٰوةٌ وَتَسْلِيمٌ', '٦', () {
                         Get.to(
                           () => tabsBarPage(
                             showTranslationNotifier: showTranslationNotifier,
-                            darkMode: darkMode,
+                            isDarkTheme: isDarkTheme,
                             selectedpage: 5,
                           ),
                           transition: Transition.fade,
                         );
                       }),
-                      Detailed1(
-                          context, darkMode ? true : false, 'دُعــــآء', '٧',
-                          () {
+                      Detailed1(context, isDarkTheme, 'دُعــــآء', '٧', () {
                         Get.to(
                           () => tabsBarPage(
                             showTranslationNotifier: showTranslationNotifier,
-                            darkMode: darkMode,
+                            isDarkTheme: isDarkTheme,
                             selectedpage: 6,
                           ),
                           transition: Transition.fade,
                         );
                       }),
-                      Detailed1(context, darkMode ? true : false,
-                          'يَا أَكْرَمَ الْخَلْقِ', '٨', () {
+                      Detailed1(
+                          context, isDarkTheme, 'يَا أَكْرَمَ الْخَلْقِ', '٨',
+                          () {
                         Get.to(
                           () => tabsBarPage(
                             showTranslationNotifier: showTranslationNotifier,
-                            darkMode: darkMode,
+                            isDarkTheme: isDarkTheme,
                             selectedpage: 7,
                           ),
                           transition: Transition.fade,
@@ -397,12 +372,12 @@ class _MainScreenState extends State<MainScreen> {
                       }),
                       Padding(
                         padding: EdgeInsets.only(bottom: 50),
-                        child: Detailed1(context, darkMode ? true : false,
+                        child: Detailed1(context, isDarkTheme,
                             'وَاهًا لِلْقُبَّةِ الْخَضْرَاءِ', '٩', () {
                           Get.to(
                             () => tabsBarPage(
                               showTranslationNotifier: showTranslationNotifier,
-                              darkMode: darkMode,
+                              isDarkTheme: isDarkTheme,
                               selectedpage: 8,
                             ),
                             transition: Transition.fade,
@@ -414,7 +389,7 @@ class _MainScreenState extends State<MainScreen> {
                 ]),
           ),
           floatingActionButton: ExpandableFAB(
-            isDarkTheme: darkMode,
+            isDarkTheme: isDarkTheme,
           )),
     );
   }
