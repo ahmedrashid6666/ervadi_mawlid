@@ -4,11 +4,13 @@ import 'dart:ui';
 import 'package:ervadi/dargas.dart';
 import 'package:ervadi/expandablefab.dart';
 import 'package:ervadi/module/assets.dart';
+import 'package:ervadi/module/invisible_header.dart';
 import 'package:ervadi/tab_bar_page.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ervadi/module/theme.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'about.dart';
 import 'module/open_url.dart';
@@ -20,6 +22,13 @@ import 'package:share_plus/share_plus.dart';
 //   State<HomePage> createState() => _HomePageState();
 // }
 
+bool darkMode = false;
+IconData _iconLight = Icons.wb_sunny;
+IconData _iconDark = Icons.nights_stay;
+ThemeData _lightTheme = ThemeData(
+  primarySwatch: myColor,
+  brightness: Brightness.light,
+);
 ThemeData _darkTheme = ThemeData(
   primarySwatch: Colors.grey,
   brightness: Brightness.dark,
@@ -31,354 +40,382 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  bool isDarkMode = true;
+  late SharedPreferences _prefs;
+
+  void initState() {
+    super.initState();
+    SharedPreferences.getInstance().then((prefs) {
+      setState(() {
+        _prefs = prefs;
+        darkMode = _prefs.getBool("darkMode") ?? true;
+      });
+    });
+  }
+
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   final ValueNotifier<bool> showTranslationNotifier = ValueNotifier(true);
   @override
   Widget build(BuildContext context) {
-    final themeProvider = Provider.of<ThemeProvider>(context);
-    final isDarkTheme =
-        themeProvider.selectedTheme.brightness == Brightness.dark;
-
-    return Scaffold(
-      resizeToAvoidBottomInset: true,
-      drawerEdgeDragWidth: 0,
-      key: _scaffoldKey,
-      endDrawer: Container(
-        width: 270,
-        child: Drawer(
-          backgroundColor: Theme.of(context).colorScheme.primary,
-          child: ListView(
-            padding: EdgeInsets.zero,
-            children: <Widget>[
-              SizedBox(
-                height: 240,
-                child: DrawerHeader(
-                    padding: EdgeInsets.zero,
-                    child: Container(
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            colors: [
-                              Theme.of(context).colorScheme.primary,
-                              Theme.of(context).colorScheme.secondary,
-                            ],
-                            begin: Alignment.topLeft,
-                            end: Alignment.topRight,
-                          ),
-                        ),
-                        child: Center(
-                          // child: Text(
-                          //   'يروآدي مولد',
-                          //   style: TextStyle(
-                          //       color: ltWhite,
-                          //       fontSize: 25,
-                          //       fontFamily: 'lpmq'),
-                          // ),
-                          child: SvgPicture.asset(
-                            ervadi,
-                            height: 50,
-                            color: white,
-                          ),
-                        ))),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(right: 15, left: 15),
-                child: Divider(
-                  height: 6,
-                  thickness: 0.2,
-                  color: white,
-                ),
-              ),
-              ListTile(
-                leading: Icon(
-                  Icons.input,
-                  color: Theme.of(context).hintColor,
-                ),
-                title: Text(
-                  'Share App',
-                  style: TextStyle(
-                      color: Theme.of(context).hintColor,
-                      fontSize: 18,
-                      fontFamily: 'lpmq',
-                      fontWeight: FontWeight.w800),
-                ),
-                onTap: () => {
-                  Share.share(
-                    '*Ervadi Mawlid*: https://play.google.com/store/apps/details?id=in.mawlid.ervadi',
-                  ),
-                  Get.back()
-                },
-              ),
-              ListTile(
-                leading: Icon(
-                  Icons.system_update,
-                  color: Theme.of(context).hintColor,
-                ),
-                title: Text(
-                  'Check For Update',
-                  style: TextStyle(
-                      color: Theme.of(context).hintColor,
-                      fontSize: 18,
-                      fontFamily: 'lpmq',
-                      fontWeight: FontWeight.w800),
-                ),
-                onTap: () => {
-                  launch(
-                      'https://play.google.com/store/apps/details?id=in.mawlid.ervadi'),
-                  Get.back()
-                },
-              ),
-              ListTile(
-                  leading: Icon(
-                    Icons.message,
-                    color: Theme.of(context).hintColor,
-                  ),
-                  title: Text(
-                    'Feedback',
-                    style: TextStyle(
-                        color: Theme.of(context).hintColor,
-                        fontSize: 18,
-                        fontFamily: 'lpmq',
-                        fontWeight: FontWeight.w800),
-                  ),
-                  onTap: () {
-                    launch(
-                        'https://wa.me/+918075703855/?text=Ervadi%20Mawlid%20App%20feedback%20');
-                    Get.back();
-                  }),
-              ListTile(
-                leading: Icon(
-                  Icons.info,
-                  color: Theme.of(context).hintColor,
-                ),
-                title: Text(
-                  'About',
-                  style: TextStyle(
-                      color: Theme.of(context).hintColor,
-                      fontSize: 18,
-                      fontFamily: 'lpmq',
-                      fontWeight: FontWeight.w800),
-                ),
-                onTap: () {
-                  Get.back();
-                  Get.to(() => AboutPage());
-                },
-              ),
-            ],
-          ),
-        ),
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      scrollBehavior: const MaterialScrollBehavior().copyWith(
+        dragDevices: PointerDeviceKind.values.toSet(),
       ),
-      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-      body: SafeArea(
-        child: Directionality(
-          textDirection: TextDirection.rtl,
-          child: CustomScrollView(
-            physics: BouncingScrollPhysics(),
-            slivers: <Widget>[
-              SliverAppBar(
-                backgroundColor: Theme.of(context).colorScheme.primary,
-                automaticallyImplyLeading: false,
-                expandedHeight: 250,
-                floating: true,
-                pinned: true,
-                actions: [
-                  Padding(
-                    padding: const EdgeInsets.only(
-                        left: 5, right: 10, bottom: 10, top: 10),
-                    child: ElevatedButton(
-                      onPressed: () {
-                        Provider.of<ThemeProvider>(context, listen: false)
-                            .swapTheme();
-                      },
-                      child: Icon(
-                        Icons.brightness_6,
-                        color: Colors.white,
-                        size: 25,
-                      ),
-                      style: ElevatedButton.styleFrom(
+      home: Scaffold(
+          resizeToAvoidBottomInset: true,
+          drawerEdgeDragWidth: 0,
+          key: _scaffoldKey,
+          endDrawer: Container(
+            width: 270,
+            child: Drawer(
+              backgroundColor: Theme.of(context).colorScheme.primary,
+              child: ListView(
+                padding: EdgeInsets.zero,
+                children: <Widget>[
+                  SizedBox(
+                    height: 240,
+                    child: DrawerHeader(
                         padding: EdgeInsets.zero,
-                        shape: CircleBorder(),
-                        backgroundColor: Colors.black12,
-                      ),
+                        child: Container(
+                            decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                colors: [
+                                  Theme.of(context).colorScheme.primary,
+                                  Theme.of(context).colorScheme.secondary,
+                                ],
+                                begin: Alignment.topLeft,
+                                end: Alignment.topRight,
+                              ),
+                            ),
+                            child: Center(
+                              // child: Text(
+                              //   'يروآدي مولد',
+                              //   style: TextStyle(
+                              //       color: ltWhite,
+                              //       fontSize: 25,
+                              //       fontFamily: 'lpmq'),
+                              // ),
+                              child: SvgPicture.asset(
+                                ervadi,
+                                height: 50,
+                                color: white,
+                              ),
+                            ))),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(right: 15, left: 15),
+                    child: Divider(
+                      height: 6,
+                      thickness: 0.2,
+                      color: white,
                     ),
+                  ),
+                  ListTile(
+                    leading: Icon(
+                      Icons.input,
+                      color: Theme.of(context).hintColor,
+                    ),
+                    title: Text(
+                      'Share App',
+                      style: TextStyle(
+                          color: Theme.of(context).hintColor,
+                          fontSize: 18,
+                          fontFamily: 'lpmq',
+                          fontWeight: FontWeight.w800),
+                    ),
+                    onTap: () => {
+                      Share.share(
+                        '*Ervadi Mawlid*: https://play.google.com/store/apps/details?id=in.mawlid.ervadi',
+                      ),
+                      Get.back()
+                    },
+                  ),
+                  ListTile(
+                    leading: Icon(
+                      Icons.system_update,
+                      color: Theme.of(context).hintColor,
+                    ),
+                    title: Text(
+                      'Check For Update',
+                      style: TextStyle(
+                          color: Theme.of(context).hintColor,
+                          fontSize: 18,
+                          fontFamily: 'lpmq',
+                          fontWeight: FontWeight.w800),
+                    ),
+                    onTap: () => {
+                      launch(
+                          'https://play.google.com/store/apps/details?id=in.mawlid.ervadi'),
+                      Get.back()
+                    },
+                  ),
+                  ListTile(
+                      leading: Icon(
+                        Icons.message,
+                        color: Theme.of(context).hintColor,
+                      ),
+                      title: Text(
+                        'Feedback',
+                        style: TextStyle(
+                            color: Theme.of(context).hintColor,
+                            fontSize: 18,
+                            fontFamily: 'lpmq',
+                            fontWeight: FontWeight.w800),
+                      ),
+                      onTap: () {
+                        launch(
+                            'https://wa.me/+918075703855/?text=Ervadi%20Mawlid%20App%20feedback%20');
+                        Get.back();
+                      }),
+                  ListTile(
+                    leading: Icon(
+                      Icons.info,
+                      color: Theme.of(context).hintColor,
+                    ),
+                    title: Text(
+                      'About',
+                      style: TextStyle(
+                          color: Theme.of(context).hintColor,
+                          fontSize: 18,
+                          fontFamily: 'lpmq',
+                          fontWeight: FontWeight.w800),
+                    ),
+                    onTap: () {
+                      Get.back();
+                      Get.to(() => AboutPage());
+                    },
                   ),
                 ],
-                leading: Padding(
-                    padding: const EdgeInsets.only(
-                      right: 10,
-                      left: 5,
-                    ),
-                    child: SizedBox(
-                      width: 100,
-                      child: ElevatedButton(
-                        onPressed: () {
-                          _scaffoldKey.currentState?.openEndDrawer();
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.all(11),
-                          child: SvgPicture.asset(
-                            menu,
-                            height: 50,
-                            width: 50,
-                            color: white,
-                          ),
-                        ),
-                        style: ElevatedButton.styleFrom(
-                          padding: EdgeInsets.zero,
-                          shape: CircleBorder(),
-                          backgroundColor: Colors.black12,
-                        ),
-                      ),
-                    )),
-                flexibleSpace: FlexibleSpaceBar(
-                  titlePadding: EdgeInsets.only(bottom: 0, right: 48),
-                  title: SvgPicture.asset(
-                    ervadi,
-                    height: 40,
-                    width: 40,
-                    color: Colors.amberAccent,
-                  ),
-                  background: Stack(
-                    fit: StackFit.expand,
-                    children: <Widget>[
-                      Center(
-                        child: SizedBox(
-                          width: 200,
-                          height: 200,
-                          child: SvgPicture.asset(
-                            ervadi,
-                            color: Colors.amberAccent,
-                            fit: BoxFit.contain,
-                          ),
-                        ),
-                      ),
-                      const DecoratedBox(
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            begin: Alignment(0.0, 0.5),
-                            end: Alignment.center,
-                            colors: <Color>[
-                              Color(0x60000000),
-                              Color(0x00000000)
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
               ),
-
-              // Scrollable content
-              SliverList(
-                delegate: SliverChildListDelegate([
-                  Detailed1(context, isDarkTheme, 'مُرَادِي بَيت', '١', () {
-                    Get.to(
-                      () => tabsBarPage(
-                        showTranslationNotifier: showTranslationNotifier,
-                        isDarkTheme: isDarkTheme,
-                        selectedpage: 0,
-                      ),
-                    );
-                  }),
-                  Detailed1(context, isDarkTheme, 'أَيَا مَحْبُوب', '٢', () {
-                    Get.to(
-                      () => tabsBarPage(
-                        showTranslationNotifier: showTranslationNotifier,
-                        isDarkTheme: isDarkTheme,
-                        selectedpage: 1,
-                      ),
-                      transition: Transition.fade,
-                    );
-                  }),
-                  Detailed1(
-                      context, isDarkTheme, 'يٰا وَلِي سَلَامْ عَلَيْكُم', '٣',
-                      () {
-                    Get.to(
-                      () => tabsBarPage(
-                        showTranslationNotifier: showTranslationNotifier,
-                        isDarkTheme: isDarkTheme,
-                        selectedpage: 2,
-                      ),
-                      transition: Transition.fade,
-                    );
-                  }),
-                  Detailed1(context, isDarkTheme,
-                      'أَيٰا سٰامِي لَدَى الْقٰادِرْ', '٤', () {
-                    Get.to(
-                      () => tabsBarPage(
-                        showTranslationNotifier: showTranslationNotifier,
-                        isDarkTheme: isDarkTheme,
-                        selectedpage: 3,
-                      ),
-                      transition: Transition.fade,
-                    );
-                  }),
-                  Detailed1(context, isDarkTheme, 'عَبَّاسْ مَنْترِي بَيت', '٥',
-                      () {
-                    Get.to(
-                      () => tabsBarPage(
-                        showTranslationNotifier: showTranslationNotifier,
-                        isDarkTheme: isDarkTheme,
-                        selectedpage: 4,
-                      ),
-                      transition: Transition.fade,
-                    );
-                  }),
-                  Detailed1(context, isDarkTheme, 'صَلٰوةٌ وَتَسْلِيمٌ', '٦',
-                      () {
-                    Get.to(
-                      () => tabsBarPage(
-                        showTranslationNotifier: showTranslationNotifier,
-                        isDarkTheme: isDarkTheme,
-                        selectedpage: 5,
-                      ),
-                      transition: Transition.fade,
-                    );
-                  }),
-                  Detailed1(context, isDarkTheme, 'دُعــــآء', '٧', () {
-                    Get.to(
-                      () => tabsBarPage(
-                        showTranslationNotifier: showTranslationNotifier,
-                        isDarkTheme: isDarkTheme,
-                        selectedpage: 6,
-                      ),
-                      transition: Transition.fade,
-                    );
-                  }),
-                  Detailed1(context, isDarkTheme, 'يَا أَكْرَمَ الْخَلْقِ', '٨',
-                      () {
-                    Get.to(
-                      () => tabsBarPage(
-                        showTranslationNotifier: showTranslationNotifier,
-                        isDarkTheme: isDarkTheme,
-                        selectedpage: 7,
-                      ),
-                      transition: Transition.fade,
-                    );
-                  }),
-                  Padding(
-                    padding: EdgeInsets.only(bottom: 50),
-                    child: Detailed1(context, isDarkTheme,
-                        'وَاهًا لِلْقُبَّةِ الْخَضْرَاءِ', '٩', () {
-                      Get.to(
-                        () => tabsBarPage(
-                          showTranslationNotifier: showTranslationNotifier,
-                          isDarkTheme: isDarkTheme,
-                          selectedpage: 8,
+            ),
+          ),
+          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+          body: SafeArea(
+            child: CustomScrollView(
+                physics: BouncingScrollPhysics(),
+                slivers: <Widget>[
+                  Directionality(
+                    textDirection: TextDirection.rtl,
+                    child: SliverAppBar(
+                      backgroundColor: Theme.of(context).colorScheme.primary,
+                      automaticallyImplyLeading: false,
+                      expandedHeight: 250,
+                      floating: true,
+                      pinned: true,
+                      actions: [
+                        Padding(
+                          padding: const EdgeInsets.only(
+                              left: 5, right: 10, bottom: 10, top: 10),
+                          child: ElevatedButton(
+                            onPressed: () {
+                              Provider.of<ThemeProvider>(context, listen: false)
+                                  .swapTheme();
+                              setState(() {
+                                darkMode = !darkMode; // Add this line
+                                _prefs.setBool("darkMode",
+                                    darkMode); // Add this line to save the preference
+                              });
+                            },
+                            child: Icon(
+                              Icons.brightness_6,
+                              color: Colors.white,
+                              size: 25,
+                            ),
+                            style: ElevatedButton.styleFrom(
+                              padding: EdgeInsets.zero,
+                              shape: CircleBorder(),
+                              backgroundColor: Colors.black12,
+                            ),
+                          ),
                         ),
-                        transition: Transition.fade,
-                      );
-                    }),
+                      ],
+                      leading: Padding(
+                          padding: const EdgeInsets.only(
+                            right: 10,
+                            left: 5,
+                          ),
+                          child: SizedBox(
+                            width: 100,
+                            child: ElevatedButton(
+                              onPressed: () {
+                                _scaffoldKey.currentState?.openEndDrawer();
+                              },
+                              child: Padding(
+                                padding: const EdgeInsets.all(11),
+                                child: SvgPicture.asset(
+                                  menu,
+                                  height: 50,
+                                  width: 50,
+                                  color: white,
+                                ),
+                              ),
+                              style: ElevatedButton.styleFrom(
+                                padding: EdgeInsets.zero,
+                                shape: CircleBorder(),
+                                // Button color
+                                backgroundColor: Colors.black12,
+                                // Splash color
+                              ),
+                            ),
+                          )),
+                      flexibleSpace: FlexibleSpaceBar(
+                        // Make sure title is centered horizontally
+                        titlePadding: EdgeInsets.only(
+                            bottom: 0, right: 48), // Adjust this if needed
+                        title: Container(
+                          height: kToolbarHeight, // Standard AppBar height
+                          alignment: Alignment
+                              .centerRight, // Center both vertically and horizontally
+                          child: InvisibleExpandHeader(
+                            child: SvgPicture.asset(
+                              ervadi,
+                              height: 50,
+                              width: 50,
+                              fit: BoxFit.cover,
+                              color: Colors.amberAccent,
+                            ),
+                          ),
+                        ),
+
+                        background: Stack(
+                          fit: StackFit.expand,
+                          children: <Widget>[
+                            SvgPicture.asset(
+                              ervadi,
+                              color: Colors.amberAccent,
+                              fit: BoxFit.contain,
+                            ),
+                            const DecoratedBox(
+                              decoration: BoxDecoration(
+                                gradient: LinearGradient(
+                                  begin: Alignment(0.0, 0.5),
+                                  end: Alignment.center,
+                                  colors: <Color>[
+                                    Color(0x60000000),
+                                    Color(0x00000000)
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+
+                  // Scrollable content
+                  SliverList(
+                    delegate: SliverChildListDelegate([
+                      Detailed1(context, darkMode ? true : false,
+                          'مُرَادِي بَيت', '١', () {
+                        Get.to(
+                          () => tabsBarPage(
+                            showTranslationNotifier: showTranslationNotifier,
+                            darkMode: darkMode,
+                            selectedpage: 0,
+                          ),
+                        );
+                      }),
+                      Detailed1(context, darkMode ? true : false,
+                          'أَيَا مَحْبُوب', '٢', () {
+                        Get.to(
+                          () => tabsBarPage(
+                            showTranslationNotifier: showTranslationNotifier,
+                            darkMode: darkMode,
+                            selectedpage: 1,
+                          ),
+                          transition: Transition.fade,
+                        );
+                      }),
+                      Detailed1(context, darkMode ? true : false,
+                          'يٰا وَلِي سَلَامْ عَلَيْكُم', '٣', () {
+                        Get.to(
+                          () => tabsBarPage(
+                            showTranslationNotifier: showTranslationNotifier,
+                            darkMode: darkMode,
+                            selectedpage: 2,
+                          ),
+                          transition: Transition.fade,
+                        );
+                      }),
+                      Detailed1(context, darkMode ? true : false,
+                          'أَيٰا سٰامِي لَدَى الْقٰادِرْ', '٤', () {
+                        Get.to(
+                          () => tabsBarPage(
+                            showTranslationNotifier: showTranslationNotifier,
+                            darkMode: darkMode,
+                            selectedpage: 3,
+                          ),
+                          transition: Transition.fade,
+                        );
+                      }),
+                      Detailed1(context, darkMode ? true : false,
+                          'عَبَّاسْ مَنْترِي بَيت', '٥', () {
+                        Get.to(
+                          () => tabsBarPage(
+                            showTranslationNotifier: showTranslationNotifier,
+                            darkMode: darkMode,
+                            selectedpage: 4,
+                          ),
+                          transition: Transition.fade,
+                        );
+                      }),
+                      Detailed1(context, darkMode ? true : false,
+                          'صَلٰوةٌ وَتَسْلِيمٌ', '٦', () {
+                        Get.to(
+                          () => tabsBarPage(
+                            showTranslationNotifier: showTranslationNotifier,
+                            darkMode: darkMode,
+                            selectedpage: 5,
+                          ),
+                          transition: Transition.fade,
+                        );
+                      }),
+                      Detailed1(
+                          context, darkMode ? true : false, 'دُعــــآء', '٧',
+                          () {
+                        Get.to(
+                          () => tabsBarPage(
+                            showTranslationNotifier: showTranslationNotifier,
+                            darkMode: darkMode,
+                            selectedpage: 6,
+                          ),
+                          transition: Transition.fade,
+                        );
+                      }),
+                      Detailed1(context, darkMode ? true : false,
+                          'يَا أَكْرَمَ الْخَلْقِ', '٨', () {
+                        Get.to(
+                          () => tabsBarPage(
+                            showTranslationNotifier: showTranslationNotifier,
+                            darkMode: darkMode,
+                            selectedpage: 7,
+                          ),
+                          transition: Transition.fade,
+                        );
+                      }),
+                      Padding(
+                        padding: EdgeInsets.only(bottom: 50),
+                        child: Detailed1(context, darkMode ? true : false,
+                            'وَاهًا لِلْقُبَّةِ الْخَضْرَاءِ', '٩', () {
+                          Get.to(
+                            () => tabsBarPage(
+                              showTranslationNotifier: showTranslationNotifier,
+                              darkMode: darkMode,
+                              selectedpage: 8,
+                            ),
+                            transition: Transition.fade,
+                          );
+                        }),
+                      ),
+                    ]),
                   ),
                 ]),
-              ),
-            ],
           ),
-        ),
-      ),
-      // floatingActionButton: ExpandableFAB(
-      //   isDarkTheme: isDarkTheme,
-      // ),
+          floatingActionButton: ExpandableFAB(
+            isDarkTheme: darkMode,
+          )),
     );
   }
 
@@ -390,12 +427,13 @@ class _MainScreenState extends State<MainScreen> {
 
 Container Detailed1(
   BuildContext context,
-  bool isDarkTheme,
+  bool isDarkMode,
   String buttonar,
   String no,
   void Function() buttonAction,
 ) {
   final theme = Theme.of(context);
+  final isDark = theme.brightness == Brightness.dark;
   final screenWidth = MediaQuery.of(context).size.width;
 
   return Container(
@@ -407,7 +445,7 @@ Container Detailed1(
       borderRadius: BorderRadius.circular(16),
       boxShadow: [
         BoxShadow(
-          color: isDarkTheme
+          color: isDark
               ? Colors.black.withOpacity(0.4)
               : Colors.grey.withOpacity(0.3),
           blurRadius: 8,
@@ -416,15 +454,15 @@ Container Detailed1(
       ],
     ),
     child: Material(
-      color: isDarkTheme ? theme.primaryColor : Colors.white,
+      color: isDark ? theme.primaryColor : Colors.white,
       borderRadius: BorderRadius.circular(16),
       child: InkWell(
         onTap: buttonAction,
         borderRadius: BorderRadius.circular(16),
-        splashColor: isDarkTheme
+        splashColor: isDark
             ? Colors.amber.withOpacity(0.2)
             : theme.colorScheme.primary.withOpacity(0.2),
-        highlightColor: isDarkTheme
+        highlightColor: isDark
             ? Colors.amber.withOpacity(0.1)
             : theme.colorScheme.primary.withOpacity(0.1),
         child: Container(
@@ -436,7 +474,7 @@ Container Detailed1(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(16),
             border: Border.all(
-              color: isDarkTheme
+              color: isDark
                   ? Colors.amber.withOpacity(0.3)
                   : theme.colorScheme.primary.withOpacity(0.3),
               width: 1.5,
@@ -457,12 +495,10 @@ Container Detailed1(
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                       textDirection: TextDirection.rtl,
-                      style:
-                          (theme.textTheme.titleMedium ?? TextStyle()).copyWith(
+                      style: theme.textTheme.titleMedium?.copyWith(
                         fontSize: screenWidth * 0.058,
-                        color: isDarkTheme
-                            ? Colors.white
-                            : theme.colorScheme.primary,
+                        color:
+                            isDark ? Colors.white : theme.colorScheme.primary,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
@@ -476,7 +512,7 @@ Container Detailed1(
                     gradient: LinearGradient(
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
-                      colors: isDarkTheme
+                      colors: isDark
                           ? [Colors.amber.withOpacity(0.8), Colors.amber]
                           : [
                               theme.colorScheme.primary,
@@ -485,14 +521,14 @@ Container Detailed1(
                     ),
                     borderRadius: BorderRadius.circular(12),
                     border: Border.all(
-                      color: isDarkTheme
+                      color: isDark
                           ? Colors.amber.withOpacity(0.3)
                           : theme.colorScheme.primary.withOpacity(0.3),
                       width: 1.5,
                     ),
                     boxShadow: [
                       BoxShadow(
-                        color: isDarkTheme
+                        color: isDark
                             ? Colors.amber.withOpacity(0.3)
                             : theme.colorScheme.primary.withOpacity(0.3),
                         blurRadius: 4,
@@ -500,52 +536,32 @@ Container Detailed1(
                       ),
                     ],
                   ),
-                  // child: Center(
-                  //   child: Text(
-                  //     no,
-                  //     style: TextStyle(
-                  //       fontSize: screenWidth * 0.058,
-                  //       fontWeight: FontWeight.w900,
-                  //       color: isDarkTheme ? Colors.black : Colors.white,
-                  //       fontFamily: 'lpmq',
-                  //       letterSpacing: 0.5,
-                  //     ),
-                  //     textAlign: TextAlign.center,
-                  //   ),
-                  // ),
-                  child: SizedBox(
-                    width: screenWidth * 0.12,
-                    height: screenWidth * 0.12,
-                    child: Stack(
-                      alignment: Alignment.center,
-                      children: [
-                        // Background SVG (if needed)
-                        if (nmbrborder.isNotEmpty)
-                          SizedBox(
-                            width: screenWidth * 0.09,
-                            height: screenWidth * 0.09,
-                            child: SvgPicture.asset(
-                              nmbrborder,
-                              color: isDarkTheme
-                                  ? Colors.black.withOpacity(0.2)
-                                  : Colors.white.withOpacity(0.3),
-                              fit: BoxFit.contain,
-                            ),
-                          ),
-                        // Number Text
-                        Text(
-                          no,
-                          style: TextStyle(
-                            fontSize: screenWidth * 0.058,
-                            fontWeight: FontWeight.w900,
-                            color: isDarkTheme ? Colors.black : Colors.white,
-                            fontFamily: 'lpmq',
-                            letterSpacing: 0.5,
-                          ),
-                          textAlign: TextAlign.center,
+                  child: Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      // Background SVG (if needed)
+                      if (nmbrborder.isNotEmpty)
+                        SvgPicture.asset(
+                          nmbrborder,
+                          width: screenWidth * 0.09,
+                          color: isDark
+                              ? Colors.black.withOpacity(0.2)
+                              : Colors.white.withOpacity(0.3),
+                          fit: BoxFit.fitHeight,
                         ),
-                      ],
-                    ),
+                      // Number Text
+                      Text(
+                        no,
+                        style: TextStyle(
+                          fontSize: screenWidth * 0.058,
+                          fontWeight: FontWeight.w900,
+                          color: isDark ? Colors.black : Colors.white,
+                          fontFamily: 'lpmq',
+                          letterSpacing: 0.5,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ],
                   ),
                 ),
               ],
