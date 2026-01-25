@@ -1,6 +1,4 @@
 // import 'package:animated_splash_screen/animated_splash_screen.dart';
-import 'dart:ui';
-
 import 'package:ervadi/dargas.dart';
 import 'package:ervadi/expandablefab.dart';
 import 'package:ervadi/module/assets.dart';
@@ -19,11 +17,6 @@ import 'package:share_plus/share_plus.dart';
 //   @override
 //   State<HomePage> createState() => _HomePageState();
 // }
-
-ThemeData _darkTheme = ThemeData(
-  primarySwatch: Colors.grey,
-  brightness: Brightness.dark,
-);
 
 class MainScreen extends StatefulWidget {
   @override
@@ -229,42 +222,39 @@ class _MainScreenState extends State<MainScreen> {
                         ),
                       ),
                     )),
-                flexibleSpace: FlexibleSpaceBar(
-                  titlePadding: EdgeInsets.only(bottom: 0, right: 48),
-                  title: SvgPicture.asset(
+                title: Padding(
+                  padding: const EdgeInsets.only(right: 48),
+                  child: SvgPicture.asset(
                     ervadi,
                     height: 40,
                     width: 40,
                     color: Colors.amberAccent,
                   ),
-                  background: Stack(
-                    fit: StackFit.expand,
-                    children: <Widget>[
-                      Center(
-                        child: SizedBox(
-                          width: 200,
-                          height: 200,
-                          child: SvgPicture.asset(
-                            ervadi,
-                            color: Colors.amberAccent,
-                            fit: BoxFit.contain,
-                          ),
+                ),
+                flexibleSpace: Stack(
+                  fit: StackFit.expand,
+                  children: <Widget>[
+                    Center(
+                      child: SizedBox(
+                        width: 200,
+                        height: 200,
+                        child: SvgPicture.asset(
+                          ervadi,
+                          color: Colors.amberAccent,
+                          fit: BoxFit.contain,
                         ),
                       ),
-                      const DecoratedBox(
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            begin: Alignment(0.0, 0.5),
-                            end: Alignment.center,
-                            colors: <Color>[
-                              Color(0x60000000),
-                              Color(0x00000000)
-                            ],
-                          ),
+                    ),
+                    const DecoratedBox(
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          begin: Alignment(0.0, 0.5),
+                          end: Alignment.center,
+                          colors: <Color>[Color(0x60000000), Color(0x00000000)],
                         ),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
 
