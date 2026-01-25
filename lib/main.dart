@@ -1,3 +1,4 @@
+import 'package:ervadi/module/audio_provider.dart';
 import 'package:ervadi/module/assets.dart';
 import 'dart:ui';
 import 'package:flutter/material.dart';
@@ -17,11 +18,13 @@ Future<void> main() async {
   final isDarkTheme = prefs.getBool("darkTheme") ?? false;
 
   runApp(
-    ChangeNotifierProvider<ThemeProvider>(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => ThemeProvider(isDarkTheme)),
+        ChangeNotifierProvider(create: (_) => FontSize()),
+        ChangeNotifierProvider(create: (_) => AudioProvider()),
+      ],
       child: const MyApp(),
-      create: (BuildContext context) {
-        return ThemeProvider(isDarkTheme);
-      },
     ),
   );
 }
@@ -36,26 +39,23 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) => FontSize(),
-      child: Consumer<ThemeProvider>(
-        builder: (context, value, child) {
-          return GetMaterialApp(
-            debugShowCheckedModeBanner: false,
-            scrollBehavior: const MaterialScrollBehavior().copyWith(
-              dragDevices: PointerDeviceKind.values.toSet(),
-            ),
-            title: 'Ervadi Mawlid',
-            theme: value.getTheme(),
-            home: UpgradeAlert(
-              showIgnore: false,
-              showLater: false,
-              shouldPopScope: () => false, // ❗ Prevent closing without update
-              child: MainScreen(),
-            ),
-          );
-        },
-      ),
+    return Consumer<ThemeProvider>(
+      builder: (context, themeProvider, child) {
+        return GetMaterialApp(
+          debugShowCheckedModeBanner: false,
+          scrollBehavior: const MaterialScrollBehavior().copyWith(
+            dragDevices: PointerDeviceKind.values.toSet(),
+          ),
+          title: 'Ervadi Mawlid',
+          theme: themeProvider.getTheme(),
+          home: UpgradeAlert(
+            showIgnore: false,
+            showLater: false,
+            shouldPopScope: () => false, // ❗ Prevent closing without update
+            child: MainScreen(),
+          ),
+        );
+      },
     );
   }
 }

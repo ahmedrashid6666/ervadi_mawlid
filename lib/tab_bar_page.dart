@@ -9,6 +9,9 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'baith_contnt.dart';
 import 'module/radio_btn.dart';
+import 'module/audio_provider.dart';
+import 'package:audio_video_progress_bar/audio_video_progress_bar.dart';
+import 'package:just_audio/just_audio.dart';
 
 class FontSize with ChangeNotifier {
   double _fontSize = 25;
@@ -66,6 +69,7 @@ class _tabsBarPageState extends State<tabsBarPage>
 
   // Add the selectedLanguage variable
   String selectedLanguage = '';
+  bool _showAudioPlayer = false;
 
   @override
   void initState() {
@@ -75,8 +79,22 @@ class _tabsBarPageState extends State<tabsBarPage>
       length: 9,
       vsync: this,
     );
+
+    // Load initial audio
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<AudioProvider>(context, listen: false)
+          .loadAudio(widget.selectedpage);
+    });
+
     _tabController.addListener(() {
-      setState(() {}); // rebuild on tab change
+      if (!_tabController.indexIsChanging) {
+        setState(() {
+          currentTabIndex = _tabController.index;
+        });
+        // Switch audio on tab change
+        Provider.of<AudioProvider>(context, listen: false)
+            .loadAudio(_tabController.index);
+      }
     });
     _loadTranslationToggle();
     _loadLanguagePreference();
@@ -210,9 +228,10 @@ class _tabsBarPageState extends State<tabsBarPage>
           clipBehavior: Clip.antiAlias,
           elevation: 0,
           padding: EdgeInsets.zero,
-          child: Container(
+          child: AnimatedContainer(
+            duration: const Duration(milliseconds: 300),
             width: double.infinity,
-            height: 75,
+            height: _showAudioPlayer ? 115 : 65,
             padding: EdgeInsets.zero,
             margin: EdgeInsets.zero,
             decoration: BoxDecoration(
@@ -225,197 +244,297 @@ class _tabsBarPageState extends State<tabsBarPage>
                 end: Alignment.bottomRight,
               ),
             ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                Expanded(
-                  child: Container(
-                    alignment: Alignment.centerLeft,
-                    padding: EdgeInsets.only(left: 15),
-                    child: Row(children: [
-                      // Home button
-                      Padding(
-                        padding: const EdgeInsets.only(right: 15),
-                        child: IconButton(
-                          padding: EdgeInsets.zero,
-                          constraints: BoxConstraints(),
+            child: SingleChildScrollView(
+              physics: const NeverScrollableScrollPhysics(),
+              child: SizedBox(
+                height: _showAudioPlayer ? 115 : 65,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    if (_showAudioPlayer)
+                      // Audio Player Progress Bar
+                      Consumer<AudioProvider>(
+                        builder: (context, audioProvider, child) {
+                          return StreamBuilder<Duration?>(
+                            stream: audioProvider.player.positionStream,
+                            builder: (context, snapshot) {
+                              final position = snapshot.data ?? Duration.zero;
+                              return StreamBuilder<Duration?>(
+                                stream: audioProvider.player.durationStream,
+                                builder: (context, snapshot) {
+                                  final duration =
+                                      snapshot.data ?? Duration.zero;
+                                  return Padding(
+                                    padding: const EdgeInsets.fromLTRB(
+                                        20, 10, 20, 0),
+                                    child: ProgressBar(
+                                      progress: position,
+                                      total: duration,
+                                      barHeight: 4.0,
+                                      thumbRadius: 7.0,
+                                      progressBarColor: Colors.amber,
+                                      bufferedBarColor:
+                                          Colors.amber.withOpacity(0.3),
+                                      baseBarColor:
+                                          Colors.white.withOpacity(0.2),
+                                      thumbColor: Colors.amber,
+                                      timeLabelLocation:
+                                          TimeLabelLocation.sides,
+                                      timeLabelTextStyle: const TextStyle(
+                                        color: Colors.amber,
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                      onSeek: (duration) {
+                                        audioProvider.player.seek(duration);
+                                      },
+                                    ),
+                                  );
+                                },
+                              );
+                            },
+                          );
+                        },
+                      ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: <Widget>[
+                        Expanded(
+                          child: Container(
+                            alignment: Alignment.centerLeft,
+                            padding: const EdgeInsets.only(left: 15),
+                            child: Row(
+                              children: [
+                                // Home button
+                                Padding(
+                                  padding: const EdgeInsets.only(right: 15),
+                                  child: IconButton(
+                                    padding: EdgeInsets.zero,
+                                    constraints: const BoxConstraints(),
+                                    icon: SvgPicture.asset(
+                                      home,
+                                      height: 20,
+                                      color: white,
+                                    ),
+                                    onPressed: () {
+                                      Get.back();
+                                    },
+                                  ),
+                                ),
+                                // SINGLE Translation button
+                                PopupMenuButton<String>(
+                                  icon: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      const Icon(Icons.translate,
+                                          color: white, size: 23),
+                                      const SizedBox(width: 4),
+                                      Text(
+                                        selectedLanguage.isNotEmpty
+                                            ? selectedLanguage
+                                                .substring(0, 2)
+                                                .toUpperCase()
+                                            : 'Lang',
+                                        style: const TextStyle(
+                                          color: white,
+                                          fontSize: 10,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  onSelected: (String language) async {
+                                    setState(() {
+                                      selectedLanguage = language;
+                                    });
+                                    if (language.isEmpty) {
+                                      widget.showTranslationNotifier.value =
+                                          false;
+                                      _saveTranslationToggle(false);
+                                      _saveLanguagePreference('');
+                                    } else {
+                                      widget.showTranslationNotifier.value =
+                                          true;
+                                      _saveTranslationToggle(true);
+                                      _saveLanguagePreference(language);
+                                    }
+                                  },
+                                  itemBuilder: (BuildContext context) => [
+                                    PopupMenuItem<String>(
+                                      value: 'Malayalam',
+                                      child: Row(
+                                        children: [
+                                          const Icon(Icons.language, size: 20),
+                                          const SizedBox(width: 8),
+                                          const Text('Malayalam'),
+                                          if (selectedLanguage == 'Malayalam')
+                                            const Spacer(),
+                                          if (selectedLanguage == 'Malayalam')
+                                            const Icon(Icons.check,
+                                                color: Colors.green),
+                                        ],
+                                      ),
+                                    ),
+                                    PopupMenuItem<String>(
+                                      value: '',
+                                      child: Row(
+                                        children: [
+                                          const Icon(Icons.translate, size: 20),
+                                          const SizedBox(width: 8),
+                                          const Text('No Translation'),
+                                          if (selectedLanguage.isEmpty)
+                                            const Spacer(),
+                                          if (selectedLanguage.isEmpty)
+                                            const Icon(Icons.check,
+                                                color: Colors.green),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        Expanded(
+                          child: Container(
+                            alignment: Alignment.centerRight,
+                            padding: const EdgeInsets.only(right: 15),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                // Audio Toggle/Controls
+                                Consumer<AudioProvider>(
+                                  builder: (context, audioProvider, child) {
+                                    return Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        if (_showAudioPlayer) ...[
+                                          StreamBuilder<PlayerState>(
+                                            stream: audioProvider
+                                                .player.playerStateStream,
+                                            builder: (context, snapshot) {
+                                              final playerState = snapshot.data;
+                                              final processingState =
+                                                  playerState?.processingState;
+                                              final playing =
+                                                  playerState?.playing;
+
+                                              if (processingState ==
+                                                      ProcessingState.loading ||
+                                                  processingState ==
+                                                      ProcessingState
+                                                          .buffering) {
+                                                return const SizedBox(
+                                                  width: 24,
+                                                  height: 24,
+                                                  child:
+                                                      CircularProgressIndicator(
+                                                    strokeWidth: 2,
+                                                    valueColor:
+                                                        AlwaysStoppedAnimation<
+                                                            Color>(white),
+                                                  ),
+                                                );
+                                              } else if (playing != true) {
+                                                return IconButton(
+                                                  icon: const Icon(
+                                                      Icons.play_arrow_rounded,
+                                                      color: white,
+                                                      size: 30),
+                                                  onPressed: audioProvider.play,
+                                                );
+                                              } else {
+                                                return IconButton(
+                                                  icon: const Icon(
+                                                      Icons.pause_rounded,
+                                                      color: white,
+                                                      size: 30),
+                                                  onPressed:
+                                                      audioProvider.pause,
+                                                );
+                                              }
+                                            },
+                                          ),
+                                          IconButton(
+                                            icon: const Icon(Icons.stop_rounded,
+                                                color: white, size: 28),
+                                            onPressed: () {
+                                              audioProvider.stop();
+                                              setState(() =>
+                                                  _showAudioPlayer = false);
+                                            },
+                                          ),
+                                        ] else
+                                          IconButton(
+                                            padding: EdgeInsets.zero,
+                                            constraints: const BoxConstraints(),
+                                            icon: const Icon(
+                                                Icons.music_note_rounded,
+                                                color: white,
+                                                size: 28),
+                                            onPressed: () {
+                                              setState(() =>
+                                                  _showAudioPlayer = true);
+                                            },
+                                          ),
+                                      ],
+                                    );
+                                  },
+                                ),
+                                const SizedBox(width: 8),
+                                IconButton(
+                                  padding: EdgeInsets.zero,
+                                  constraints: const BoxConstraints(),
+                                  iconSize: 28,
+                                  icon: SvgPicture.asset(
+                                    fontsz,
+                                    height: 24,
+                                    color: widget.isDarkTheme ? white : ltWhite,
+                                    fit: BoxFit.fitHeight,
+                                  ),
+                                  onPressed: () {
+                                    showModalBottomSheet(
+                                      backgroundColor: trsnprnt,
+                                      useRootNavigator: true,
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return BottomModalSheet(
+                                          radiobtndark: widget.isDarkTheme,
+                                          isDarkTheme: widget.isDarkTheme,
+                                          fontsize: fontSize.fontSize,
+                                          onChanged: (double newValue) {
+                                            setState(() {
+                                              widget.textSize = newValue;
+                                            });
+                                          },
+                                        );
+                                      },
+                                    );
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        IconButton(
+                          iconSize: 28,
+                          padding: const EdgeInsets.only(right: 28.0),
                           icon: SvgPicture.asset(
-                            home,
+                            menu,
                             height: 20,
                             color: white,
                           ),
                           onPressed: () {
-                            Get.back();
+                            _scaffoldKey.currentState?.openEndDrawer();
                           },
                         ),
-                      ),
-
-                      // SINGLE Translation button - shows language selection
-                      PopupMenuButton<String>(
-                        icon: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Icon(Icons.translate, color: white, size: 23),
-                            SizedBox(width: 4),
-                            Text(
-                              selectedLanguage.isNotEmpty
-                                  ? selectedLanguage
-                                      .substring(0, 2)
-                                      .toUpperCase()
-                                  : 'Lang',
-                              style: TextStyle(
-                                color: white,
-                                fontSize: 10,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ],
-                        ),
-                        onSelected: (String language) async {
-                          print('Language selected: $language');
-
-                          setState(() {
-                            selectedLanguage = language;
-                          });
-
-                          if (language.isEmpty) {
-                            // Disable translation
-                            widget.showTranslationNotifier.value = false;
-                            _saveTranslationToggle(false);
-                            _saveLanguagePreference('');
-
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text('Translation disabled'),
-                                duration: Duration(seconds: 2),
-                              ),
-                            );
-                          } else {
-                            // Enable translation for selected language
-                            widget.showTranslationNotifier.value = true;
-                            _saveTranslationToggle(true);
-                            _saveLanguagePreference(language);
-
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content:
-                                    Text('Translation enabled for $language'),
-                                duration: Duration(seconds: 2),
-                              ),
-                            );
-                          }
-                        },
-                        itemBuilder: (BuildContext context) =>
-                            <PopupMenuEntry<String>>[
-                          // PopupMenuItem<String>(
-                          //   value: 'English',
-                          //   child: Row(
-                          //     children: [
-                          //       Icon(Icons.language, size: 20),
-                          //       SizedBox(width: 8),
-                          //       Text('English'),
-                          //       if (selectedLanguage == 'English') Spacer(),
-                          //       if (selectedLanguage == 'English')
-                          //         Icon(Icons.check, color: Colors.green),
-                          //     ],
-                          //   ),
-                          // ),
-                          PopupMenuItem<String>(
-                            value: 'Malayalam',
-                            child: Row(
-                              children: [
-                                Icon(Icons.language, size: 20),
-                                SizedBox(width: 8),
-                                Text('Malayalam'),
-                                if (selectedLanguage == 'Malayalam') Spacer(),
-                                if (selectedLanguage == 'Malayalam')
-                                  Icon(Icons.check, color: Colors.green),
-                              ],
-                            ),
-                          ),
-                          // PopupMenuItem<String>(
-                          //   value: 'Tamil',
-                          //   child: Row(
-                          //     children: [
-                          //       Icon(Icons.language, size: 20),
-                          //       SizedBox(width: 8),
-                          //       Text('Tamil'),
-                          //       if (selectedLanguage == 'Tamil') Spacer(),
-                          //       if (selectedLanguage == 'Tamil')
-                          //         Icon(Icons.check, color: Colors.green),
-                          //     ],
-                          //   ),
-                          // ),
-                          // Option to disable translation
-                          PopupMenuItem<String>(
-                            value: '',
-                            child: Row(
-                              children: [
-                                Icon(Icons.translate, size: 20),
-                                SizedBox(width: 8),
-                                Text('No Translation'),
-                                if (selectedLanguage.isEmpty) Spacer(),
-                                if (selectedLanguage.isEmpty)
-                                  Icon(Icons.check, color: Colors.green),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ]),
-                  ),
-                ),
-                Expanded(
-                  child: Container(
-                    alignment: Alignment.centerRight,
-                    padding: EdgeInsets.only(right: 15),
-                    child: IconButton(
-                      padding: EdgeInsets.zero,
-                      constraints:
-                          BoxConstraints(), // Remove default constraints
-                      iconSize: 28,
-                      icon: SvgPicture.asset(
-                        fontsz,
-                        height: 24,
-                        color: widget.isDarkTheme ? white : ltWhite,
-                        fit: BoxFit.fitHeight,
-                      ),
-                      onPressed: () {
-                        showModalBottomSheet(
-                          backgroundColor: trsnprnt,
-                          useRootNavigator: true,
-                          context: context,
-                          builder: (BuildContext context) {
-                            return BottomModalSheet(
-                              radiobtndark: widget.isDarkTheme,
-                              isDarkTheme: widget.isDarkTheme,
-                              fontsize: fontSize._fontSize,
-                              onChanged: (double newValue) {
-                                setState(() {
-                                  widget.textSize = newValue;
-                                });
-                              },
-                            );
-                          },
-                        );
-                      },
+                      ],
                     ),
-                  ),
+                  ],
                 ),
-                IconButton(
-                  iconSize: 28,
-                  padding: EdgeInsets.only(right: 28.0),
-                  icon: SvgPicture.asset(
-                    menu,
-                    height: 20,
-                    color: white,
-                  ),
-                  onPressed: () {
-                    _scaffoldKey.currentState?.openEndDrawer();
-                  },
-                )
-              ],
+              ),
             ),
           ),
         ),
