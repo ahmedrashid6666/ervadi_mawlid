@@ -43,130 +43,130 @@ class _MainScreenState extends State<MainScreen> {
       resizeToAvoidBottomInset: true,
       drawerEdgeDragWidth: 0,
       key: _scaffoldKey,
-      // endDrawer: Container(
-      //   width: 270,
-      //   child: Drawer(
-      //     backgroundColor: Theme.of(context).colorScheme.primary,
-      //     child: ListView(
-      //       padding: EdgeInsets.zero,
-      //       children: <Widget>[
-      //         SizedBox(
-      //           height: 240,
-      //           child: DrawerHeader(
-      //               padding: EdgeInsets.zero,
-      //               child: Container(
-      //                   decoration: BoxDecoration(
-      //                     gradient: LinearGradient(
-      //                       colors: [
-      //                         Theme.of(context).colorScheme.primary,
-      //                         Theme.of(context).colorScheme.secondary,
-      //                       ],
-      //                       begin: Alignment.topLeft,
-      //                       end: Alignment.topRight,
-      //                     ),
-      //                   ),
-      //                   child: Center(
-      //                     // child: Text(
-      //                     //   'يروآدي مولد',
-      //                     //   style: TextStyle(
-      //                     //       color: ltWhite,
-      //                     //       fontSize: 25,
-      //                     //       fontFamily: 'lpmq'),
-      //                     // ),
-      //                     child: SvgPicture.asset(
-      //                       ervadi,
-      //                       height: 50,
-      //                       color: white,
-      //                     ),
-      //                   ))),
-      //         ),
-      //         Padding(
-      //           padding: const EdgeInsets.only(right: 15, left: 15),
-      //           child: Divider(
-      //             height: 6,
-      //             thickness: 0.2,
-      //             color: white,
-      //           ),
-      //         ),
-      //         ListTile(
-      //           leading: Icon(
-      //             Icons.input,
-      //             color: Theme.of(context).hintColor,
-      //           ),
-      //           title: Text(
-      //             'Share App',
-      //             style: TextStyle(
-      //                 color: Theme.of(context).hintColor,
-      //                 fontSize: 18,
-      //                 fontFamily: 'lpmq',
-      //                 fontWeight: FontWeight.w800),
-      //           ),
-      //           onTap: () => {
-      //             Share.share(
-      //               '*Ervadi Mawlid*: https://play.google.com/store/apps/details?id=in.mawlid.ervadi',
-      //             ),
-      //             Get.back()
-      //           },
-      //         ),
-      //         ListTile(
-      //           leading: Icon(
-      //             Icons.system_update,
-      //             color: Theme.of(context).hintColor,
-      //           ),
-      //           title: Text(
-      //             'Check For Update',
-      //             style: TextStyle(
-      //                 color: Theme.of(context).hintColor,
-      //                 fontSize: 18,
-      //                 fontFamily: 'lpmq',
-      //                 fontWeight: FontWeight.w800),
-      //           ),
-      //           onTap: () => {
-      //             launch(
-      //                 'https://play.google.com/store/apps/details?id=in.mawlid.ervadi'),
-      //             Get.back()
-      //           },
-      //         ),
-      //         ListTile(
-      //             leading: Icon(
-      //               Icons.message,
-      //               color: Theme.of(context).hintColor,
-      //             ),
-      //             title: Text(
-      //               'Feedback',
-      //               style: TextStyle(
-      //                   color: Theme.of(context).hintColor,
-      //                   fontSize: 18,
-      //                   fontFamily: 'lpmq',
-      //                   fontWeight: FontWeight.w800),
-      //             ),
-      //             onTap: () {
-      //               launch(
-      //                   'https://wa.me/+918075703855/?text=Ervadi%20Mawlid%20App%20feedback%20');
-      //               Get.back();
-      //             }),
-      //         ListTile(
-      //           leading: Icon(
-      //             Icons.info,
-      //             color: Theme.of(context).hintColor,
-      //           ),
-      //           title: Text(
-      //             'About',
-      //             style: TextStyle(
-      //                 color: Theme.of(context).hintColor,
-      //                 fontSize: 18,
-      //                 fontFamily: 'lpmq',
-      //                 fontWeight: FontWeight.w800),
-      //           ),
-      //           onTap: () {
-      //             Get.back();
-      //             Get.to(() => AboutPage());
-      //           },
-      //         ),
-      //       ],
-      //     ),
-      //   ),
-      // ),
+      endDrawer: Container(
+        width: 270,
+        child: Drawer(
+          backgroundColor: Theme.of(context).colorScheme.primary,
+          child: ListView(
+            padding: EdgeInsets.zero,
+            children: <Widget>[
+              SizedBox(
+                height: 240,
+                child: DrawerHeader(
+                    padding: EdgeInsets.zero,
+                    child: Container(
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            colors: [
+                              Theme.of(context).colorScheme.primary,
+                              Theme.of(context).colorScheme.secondary,
+                            ],
+                            begin: Alignment.topLeft,
+                            end: Alignment.topRight,
+                          ),
+                        ),
+                        child: Center(
+                          // child: Text(
+                          //   'يروآدي مولد',
+                          //   style: TextStyle(
+                          //       color: ltWhite,
+                          //       fontSize: 25,
+                          //       fontFamily: 'lpmq'),
+                          // ),
+                          child: SvgPicture.asset(
+                            ervadi,
+                            height: 50,
+                            color: white,
+                          ),
+                        ))),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(right: 15, left: 15),
+                child: Divider(
+                  height: 6,
+                  thickness: 0.2,
+                  color: white,
+                ),
+              ),
+              ListTile(
+                leading: Icon(
+                  Icons.input,
+                  color: Theme.of(context).hintColor,
+                ),
+                title: Text(
+                  'Share App',
+                  style: TextStyle(
+                      color: Theme.of(context).hintColor,
+                      fontSize: 18,
+                      fontFamily: 'lpmq',
+                      fontWeight: FontWeight.w800),
+                ),
+                onTap: () => {
+                  Share.share(
+                    '*Ervadi Mawlid*: https://play.google.com/store/apps/details?id=in.mawlid.ervadi',
+                  ),
+                  Get.back()
+                },
+              ),
+              ListTile(
+                leading: Icon(
+                  Icons.system_update,
+                  color: Theme.of(context).hintColor,
+                ),
+                title: Text(
+                  'Check For Update',
+                  style: TextStyle(
+                      color: Theme.of(context).hintColor,
+                      fontSize: 18,
+                      fontFamily: 'lpmq',
+                      fontWeight: FontWeight.w800),
+                ),
+                onTap: () => {
+                  launch(
+                      'https://play.google.com/store/apps/details?id=in.mawlid.ervadi'),
+                  Get.back()
+                },
+              ),
+              ListTile(
+                  leading: Icon(
+                    Icons.message,
+                    color: Theme.of(context).hintColor,
+                  ),
+                  title: Text(
+                    'Feedback',
+                    style: TextStyle(
+                        color: Theme.of(context).hintColor,
+                        fontSize: 18,
+                        fontFamily: 'lpmq',
+                        fontWeight: FontWeight.w800),
+                  ),
+                  onTap: () {
+                    launch(
+                        'https://wa.me/+918075703855/?text=Ervadi%20Mawlid%20App%20feedback%20');
+                    Get.back();
+                  }),
+              ListTile(
+                leading: Icon(
+                  Icons.info,
+                  color: Theme.of(context).hintColor,
+                ),
+                title: Text(
+                  'About',
+                  style: TextStyle(
+                      color: Theme.of(context).hintColor,
+                      fontSize: 18,
+                      fontFamily: 'lpmq',
+                      fontWeight: FontWeight.w800),
+                ),
+                onTap: () {
+                  Get.back();
+                  Get.to(() => AboutPage());
+                },
+              ),
+            ],
+          ),
+        ),
+      ),
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: SafeArea(
         child: Directionality(
