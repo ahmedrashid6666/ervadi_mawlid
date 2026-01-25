@@ -1,6 +1,8 @@
 // import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'dart:ui';
 
+import 'package:ervadi/dargas.dart';
+import 'package:ervadi/expandablefab.dart';
 import 'package:ervadi/module/assets.dart';
 import 'package:ervadi/module/invisible_header.dart';
 import 'package:ervadi/tab_bar_page.dart';
@@ -56,11 +58,12 @@ class _MainScreenState extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        debugShowCheckedModeBanner: false,
-        scrollBehavior: const MaterialScrollBehavior().copyWith(
-          dragDevices: PointerDeviceKind.values.toSet(),
-        ),
-        home: Scaffold(
+      debugShowCheckedModeBanner: false,
+      scrollBehavior: const MaterialScrollBehavior().copyWith(
+        dragDevices: PointerDeviceKind.values.toSet(),
+      ),
+      home: Scaffold(
+          resizeToAvoidBottomInset: true,
           drawerEdgeDragWidth: 0,
           key: _scaffoldKey,
           endDrawer: Container(
@@ -188,218 +191,232 @@ class _MainScreenState extends State<MainScreen> {
             ),
           ),
           backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-          body: CustomScrollView(
-              physics: BouncingScrollPhysics(),
-              slivers: <Widget>[
-                Directionality(
-                  textDirection: TextDirection.rtl,
-                  child: SliverAppBar(
-                    backgroundColor: Theme.of(context).colorScheme.primary,
-                    automaticallyImplyLeading: false,
-                    expandedHeight: 250,
-                    floating: true,
-                    pinned: true,
-                    actions: [
-                      Padding(
+          body: SafeArea(
+            child: CustomScrollView(
+                physics: BouncingScrollPhysics(),
+                slivers: <Widget>[
+                  Directionality(
+                    textDirection: TextDirection.rtl,
+                    child: SliverAppBar(
+                      backgroundColor: Theme.of(context).colorScheme.primary,
+                      automaticallyImplyLeading: false,
+                      expandedHeight: 250,
+                      floating: true,
+                      pinned: true,
+                      actions: [
+                        Padding(
                           padding: const EdgeInsets.only(
                               left: 5, right: 10, bottom: 10, top: 10),
                           child: ElevatedButton(
                             onPressed: () {
                               Provider.of<ThemeProvider>(context, listen: false)
                                   .swapTheme();
+                              setState(() {
+                                darkMode = !darkMode; // Add this line
+                                _prefs.setBool("darkMode",
+                                    darkMode); // Add this line to save the preference
+                              });
                             },
                             child: Icon(
                               Icons.brightness_6,
                               color: Colors.white,
+                              size: 25,
                             ),
                             style: ElevatedButton.styleFrom(
                               padding: EdgeInsets.zero,
                               shape: CircleBorder(),
-                              // Button color
                               backgroundColor: Colors.black12,
-                              // Splash color
                             ),
-                          ))
-                    ],
-                    leading: Padding(
-                        padding: const EdgeInsets.only(
-                          right: 10,
-                          left: 5,
+                          ),
                         ),
-                        child: SizedBox(
-                          width: 100,
-                          child: ElevatedButton(
-                            onPressed: () {
-                              _scaffoldKey.currentState?.openEndDrawer();
-                            },
-                            child: Padding(
-                              padding: const EdgeInsets.all(11),
-                              child: SvgPicture.asset(
-                                menu,
-                                color: white,
+                      ],
+                      leading: Padding(
+                          padding: const EdgeInsets.only(
+                            right: 10,
+                            left: 5,
+                          ),
+                          child: SizedBox(
+                            width: 100,
+                            child: ElevatedButton(
+                              onPressed: () {
+                                _scaffoldKey.currentState?.openEndDrawer();
+                              },
+                              child: Padding(
+                                padding: const EdgeInsets.all(11),
+                                child: SvgPicture.asset(
+                                  menu,
+                                  height: 50,
+                                  width: 50,
+                                  color: white,
+                                ),
+                              ),
+                              style: ElevatedButton.styleFrom(
+                                padding: EdgeInsets.zero,
+                                shape: CircleBorder(),
+                                // Button color
+                                backgroundColor: Colors.black12,
+                                // Splash color
                               ),
                             ),
-                            style: ElevatedButton.styleFrom(
-                              padding: EdgeInsets.zero,
-                              shape: CircleBorder(),
-                              // Button color
-                              backgroundColor: Colors.black12,
-                              // Splash color
+                          )),
+                      flexibleSpace: FlexibleSpaceBar(
+                        // Make sure title is centered horizontally
+                        titlePadding: EdgeInsets.only(
+                            bottom: 0, right: 48), // Adjust this if needed
+                        title: Container(
+                          height: kToolbarHeight, // Standard AppBar height
+                          alignment: Alignment
+                              .centerRight, // Center both vertically and horizontally
+                          child: InvisibleExpandHeader(
+                            child: SvgPicture.asset(
+                              ervadi,
+                              height: 50,
+                              width: 50,
+                              fit: BoxFit.cover,
+                              color: Colors.amberAccent,
                             ),
                           ),
-                        )),
-                    flexibleSpace: FlexibleSpaceBar(
-                      // Make sure title is centered horizontally
-                      titlePadding: EdgeInsets.only(
-                          bottom: 0, right: 48), // Adjust this if needed
-                      title: Container(
-                        height: kToolbarHeight, // Standard AppBar height
-                        alignment: Alignment
-                            .centerRight, // Center both vertically and horizontally
-                        child: InvisibleExpandHeader(
-                          child: SvgPicture.asset(
-                            ervadi,
-                            height: 45,
-                            width: 45,
-                            fit: BoxFit.cover,
-                            color: Colors.amberAccent,
-                          ),
                         ),
-                      ),
 
-                      background: Stack(
-                        fit: StackFit.expand,
-                        children: <Widget>[
-                          SvgPicture.asset(
-                            ervadi,
-                            color: Colors.amberAccent,
-                            fit: BoxFit.contain,
-                          ),
-                          const DecoratedBox(
-                            decoration: BoxDecoration(
-                              gradient: LinearGradient(
-                                begin: Alignment(0.0, 0.5),
-                                end: Alignment.center,
-                                colors: <Color>[
-                                  Color(0x60000000),
-                                  Color(0x00000000)
-                                ],
+                        background: Stack(
+                          fit: StackFit.expand,
+                          children: <Widget>[
+                            SvgPicture.asset(
+                              ervadi,
+                              color: Colors.amberAccent,
+                              fit: BoxFit.contain,
+                            ),
+                            const DecoratedBox(
+                              decoration: BoxDecoration(
+                                gradient: LinearGradient(
+                                  begin: Alignment(0.0, 0.5),
+                                  end: Alignment.center,
+                                  colors: <Color>[
+                                    Color(0x60000000),
+                                    Color(0x00000000)
+                                  ],
+                                ),
                               ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
                   ),
-                ),
 
-                // Scrollable content
-                SliverList(
-                  delegate: SliverChildListDelegate([
-                    Detailed1(
-                        context, darkMode ? true : false, 'مُرَادِي بَيت', '١',
-                        () {
-                      Get.to(
-                        () => tabsBarPage(
-                          showTranslationNotifier: showTranslationNotifier,
-                          darkMode: darkMode,
-                          selectedpage: 0,
-                        ),
-                      );
-                    }),
-                    Detailed1(
-                        context, darkMode ? true : false, 'أَيَا مَحْبُوب', '٢',
-                        () {
-                      Get.to(
-                        () => tabsBarPage(
-                          showTranslationNotifier: showTranslationNotifier,
-                          darkMode: darkMode,
-                          selectedpage: 1,
-                        ),
-                        transition: Transition.fade,
-                      );
-                    }),
-                    Detailed1(context, darkMode ? true : false,
-                        'يٰا وَلِي سَلَامْ عَلَيْكُم', '٣', () {
-                      Get.to(
-                        () => tabsBarPage(
-                          showTranslationNotifier: showTranslationNotifier,
-                          darkMode: darkMode,
-                          selectedpage: 2,
-                        ),
-                        transition: Transition.fade,
-                      );
-                    }),
-                    Detailed1(context, darkMode ? true : false,
-                        'أَيٰا سٰامِي لَدَى الْقٰادِرْ', '٤', () {
-                      Get.to(
-                        () => tabsBarPage(
-                          showTranslationNotifier: showTranslationNotifier,
-                          darkMode: darkMode,
-                          selectedpage: 3,
-                        ),
-                        transition: Transition.fade,
-                      );
-                    }),
-                    Detailed1(context, darkMode ? true : false,
-                        'عَبَّاسْ مَنْترِي بَيت', '٥', () {
-                      Get.to(
-                        () => tabsBarPage(
-                          showTranslationNotifier: showTranslationNotifier,
-                          darkMode: darkMode,
-                          selectedpage: 4,
-                        ),
-                        transition: Transition.fade,
-                      );
-                    }),
-                    Detailed1(context, darkMode ? true : false,
-                        'صَلٰوةٌ وَتَسْلِيمٌ', '٦', () {
-                      Get.to(
-                        () => tabsBarPage(
-                          showTranslationNotifier: showTranslationNotifier,
-                          darkMode: darkMode,
-                          selectedpage: 5,
-                        ),
-                        transition: Transition.fade,
-                      );
-                    }),
-                    Detailed1(
-                        context, darkMode ? true : false, 'دُعــــآء', '٧', () {
-                      Get.to(
-                        () => tabsBarPage(
-                          showTranslationNotifier: showTranslationNotifier,
-                          darkMode: darkMode,
-                          selectedpage: 6,
-                        ),
-                        transition: Transition.fade,
-                      );
-                    }),
-                    Detailed1(context, darkMode ? true : false,
-                        'يَا أَكْرَمَ الْخَلْقِ', '٨', () {
-                      Get.to(
-                        () => tabsBarPage(
-                          showTranslationNotifier: showTranslationNotifier,
-                          darkMode: darkMode,
-                          selectedpage: 7,
-                        ),
-                        transition: Transition.fade,
-                      );
-                    }),
-                    Detailed1(context, darkMode ? true : false,
-                        'وَاهًا لِلْقُبَّةِ الْخَضْرَاءِ', '٩', () {
-                      Get.to(
-                        () => tabsBarPage(
-                          showTranslationNotifier: showTranslationNotifier,
-                          darkMode: darkMode,
-                          selectedpage: 8,
-                        ),
-                        transition: Transition.fade,
-                      );
-                    }),
-                  ]),
-                )
-              ]),
-        ));
+                  // Scrollable content
+                  SliverList(
+                    delegate: SliverChildListDelegate([
+                      Detailed1(context, darkMode ? true : false,
+                          'مُرَادِي بَيت', '١', () {
+                        Get.to(
+                          () => tabsBarPage(
+                            showTranslationNotifier: showTranslationNotifier,
+                            darkMode: darkMode,
+                            selectedpage: 0,
+                          ),
+                        );
+                      }),
+                      Detailed1(context, darkMode ? true : false,
+                          'أَيَا مَحْبُوب', '٢', () {
+                        Get.to(
+                          () => tabsBarPage(
+                            showTranslationNotifier: showTranslationNotifier,
+                            darkMode: darkMode,
+                            selectedpage: 1,
+                          ),
+                          transition: Transition.fade,
+                        );
+                      }),
+                      Detailed1(context, darkMode ? true : false,
+                          'يٰا وَلِي سَلَامْ عَلَيْكُم', '٣', () {
+                        Get.to(
+                          () => tabsBarPage(
+                            showTranslationNotifier: showTranslationNotifier,
+                            darkMode: darkMode,
+                            selectedpage: 2,
+                          ),
+                          transition: Transition.fade,
+                        );
+                      }),
+                      Detailed1(context, darkMode ? true : false,
+                          'أَيٰا سٰامِي لَدَى الْقٰادِرْ', '٤', () {
+                        Get.to(
+                          () => tabsBarPage(
+                            showTranslationNotifier: showTranslationNotifier,
+                            darkMode: darkMode,
+                            selectedpage: 3,
+                          ),
+                          transition: Transition.fade,
+                        );
+                      }),
+                      Detailed1(context, darkMode ? true : false,
+                          'عَبَّاسْ مَنْترِي بَيت', '٥', () {
+                        Get.to(
+                          () => tabsBarPage(
+                            showTranslationNotifier: showTranslationNotifier,
+                            darkMode: darkMode,
+                            selectedpage: 4,
+                          ),
+                          transition: Transition.fade,
+                        );
+                      }),
+                      Detailed1(context, darkMode ? true : false,
+                          'صَلٰوةٌ وَتَسْلِيمٌ', '٦', () {
+                        Get.to(
+                          () => tabsBarPage(
+                            showTranslationNotifier: showTranslationNotifier,
+                            darkMode: darkMode,
+                            selectedpage: 5,
+                          ),
+                          transition: Transition.fade,
+                        );
+                      }),
+                      Detailed1(
+                          context, darkMode ? true : false, 'دُعــــآء', '٧',
+                          () {
+                        Get.to(
+                          () => tabsBarPage(
+                            showTranslationNotifier: showTranslationNotifier,
+                            darkMode: darkMode,
+                            selectedpage: 6,
+                          ),
+                          transition: Transition.fade,
+                        );
+                      }),
+                      Detailed1(context, darkMode ? true : false,
+                          'يَا أَكْرَمَ الْخَلْقِ', '٨', () {
+                        Get.to(
+                          () => tabsBarPage(
+                            showTranslationNotifier: showTranslationNotifier,
+                            darkMode: darkMode,
+                            selectedpage: 7,
+                          ),
+                          transition: Transition.fade,
+                        );
+                      }),
+                      Padding(
+                        padding: EdgeInsets.only(bottom: 50),
+                        child: Detailed1(context, darkMode ? true : false,
+                            'وَاهًا لِلْقُبَّةِ الْخَضْرَاءِ', '٩', () {
+                          Get.to(
+                            () => tabsBarPage(
+                              showTranslationNotifier: showTranslationNotifier,
+                              darkMode: darkMode,
+                              selectedpage: 8,
+                            ),
+                            transition: Transition.fade,
+                          );
+                        }),
+                      ),
+                    ]),
+                  ),
+                ]),
+          ),
+          floatingActionButton: ExpandableFAB(
+            isDarkTheme: darkMode,
+          )),
+    );
   }
 
   @override
@@ -408,55 +425,150 @@ class _MainScreenState extends State<MainScreen> {
   }
 }
 
-Padding Detailed1(
+Container Detailed1(
   BuildContext context,
   bool isDarkMode,
   String buttonar,
   String no,
   void Function() buttonAction,
 ) {
-  return Padding(
-      padding: const EdgeInsets.all(8),
-      child: ListTile(
-          title: Container(
-              height: 60,
-              width: 50,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(12),
-                color: Theme.of(context).hintColor,
-              ),
-              child: new InkWell(
-                  onTap: buttonAction,
-                  child: Directionality(
-                    textDirection: TextDirection.rtl,
-                    child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text(buttonar,
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                  textDirection: TextDirection.rtl,
-                                  style:
-                                      Theme.of(context).textTheme.titleMedium)),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Stack(
-                              alignment: Alignment.center,
-                              children: <Widget>[
-                                SvgPicture.asset(
-                                  nmbrborder,
-                                  width: 35,
-                                  color: Theme.of(context).primaryColor,
-                                  fit: BoxFit.fitHeight,
-                                ),
-                                Text(no,
-                                    style:
-                                        Theme.of(context).textTheme.titleSmall),
-                              ],
-                            ),
-                          ),
-                        ]),
-                  )))));
+  final theme = Theme.of(context);
+  final isDark = theme.brightness == Brightness.dark;
+  final screenWidth = MediaQuery.of(context).size.width;
+
+  return Container(
+    margin: EdgeInsets.symmetric(
+      horizontal: screenWidth * 0.03,
+      vertical: screenWidth * 0.02,
+    ),
+    decoration: BoxDecoration(
+      borderRadius: BorderRadius.circular(16),
+      boxShadow: [
+        BoxShadow(
+          color: isDark
+              ? Colors.black.withOpacity(0.4)
+              : Colors.grey.withOpacity(0.3),
+          blurRadius: 8,
+          offset: const Offset(0, 3),
+        ),
+      ],
+    ),
+    child: Material(
+      color: isDark ? theme.primaryColor : Colors.white,
+      borderRadius: BorderRadius.circular(16),
+      child: InkWell(
+        onTap: buttonAction,
+        borderRadius: BorderRadius.circular(16),
+        splashColor: isDark
+            ? Colors.amber.withOpacity(0.2)
+            : theme.colorScheme.primary.withOpacity(0.2),
+        highlightColor: isDark
+            ? Colors.amber.withOpacity(0.1)
+            : theme.colorScheme.primary.withOpacity(0.1),
+        child: Container(
+          height: screenWidth * 0.18,
+          padding: EdgeInsets.symmetric(
+            horizontal: screenWidth * 0.04,
+            vertical: screenWidth * 0.02,
+          ),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(
+              color: isDark
+                  ? Colors.amber.withOpacity(0.3)
+                  : theme.colorScheme.primary.withOpacity(0.3),
+              width: 1.5,
+            ),
+          ),
+          child: Directionality(
+            textDirection: TextDirection.rtl,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                // Text Section
+                Expanded(
+                  flex: 3,
+                  child: Padding(
+                    padding: EdgeInsets.only(right: screenWidth * 0.02),
+                    child: Text(
+                      buttonar,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      textDirection: TextDirection.rtl,
+                      style: theme.textTheme.titleMedium?.copyWith(
+                        fontSize: screenWidth * 0.058,
+                        color:
+                            isDark ? Colors.white : theme.colorScheme.primary,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                ),
+                // Number Section
+                Container(
+                  width: screenWidth * 0.12,
+                  height: screenWidth * 0.12,
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                      colors: isDark
+                          ? [Colors.amber.withOpacity(0.8), Colors.amber]
+                          : [
+                              theme.colorScheme.primary,
+                              theme.colorScheme.secondary,
+                            ],
+                    ),
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(
+                      color: isDark
+                          ? Colors.amber.withOpacity(0.3)
+                          : theme.colorScheme.primary.withOpacity(0.3),
+                      width: 1.5,
+                    ),
+                    boxShadow: [
+                      BoxShadow(
+                        color: isDark
+                            ? Colors.amber.withOpacity(0.3)
+                            : theme.colorScheme.primary.withOpacity(0.3),
+                        blurRadius: 4,
+                        offset: const Offset(0, 2),
+                      ),
+                    ],
+                  ),
+                  child: Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      // Background SVG (if needed)
+                      if (nmbrborder.isNotEmpty)
+                        SvgPicture.asset(
+                          nmbrborder,
+                          width: screenWidth * 0.09,
+                          color: isDark
+                              ? Colors.black.withOpacity(0.2)
+                              : Colors.white.withOpacity(0.3),
+                          fit: BoxFit.fitHeight,
+                        ),
+                      // Number Text
+                      Text(
+                        no,
+                        style: TextStyle(
+                          fontSize: screenWidth * 0.058,
+                          fontWeight: FontWeight.w900,
+                          color: isDark ? Colors.black : Colors.white,
+                          fontFamily: 'lpmq',
+                          letterSpacing: 0.5,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    ),
+  );
 }

@@ -34,7 +34,7 @@ class ThemeProvider extends ChangeNotifier {
     textTheme: const TextTheme(
       titleMedium: TextStyle(
         fontFamily: "lpmq",
-        fontWeight: FontWeight.w500,
+        fontWeight: FontWeight.w600,
         fontSize: 23,
         color: white,
       ),
@@ -44,7 +44,7 @@ class ThemeProvider extends ChangeNotifier {
         color: white,
       ),
     ),
-    tabBarTheme: const TabBarTheme(
+    tabBarTheme: const TabBarThemeData(
       labelStyle: TextStyle(color: brown),
       labelColor: white,
     ),
@@ -91,7 +91,7 @@ class ThemeProvider extends ChangeNotifier {
         color: white,
       ),
     ),
-    tabBarTheme: const TabBarTheme(
+    tabBarTheme: const TabBarThemeData(
       labelStyle: TextStyle(color: mainColor),
       labelColor: white,
     ),

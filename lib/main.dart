@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ervadi/tab_bar_page.dart';
 import 'package:ervadi/module/theme.dart';
-import 'package:in_app_update/in_app_update.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'homepage.dart';
+import 'package:upgrader/upgrader.dart'; // ✅ Added
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -34,47 +34,30 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  // This widget is the root of your application.
-  AppUpdateInfo? _updateInfo;
-  void initState() {
-    super.initState();
-    checkForUpdate();
-  }
-
-  void checkForUpdate() async {
-    try {
-      _updateInfo = await InAppUpdate.checkForUpdate();
-      if (_updateInfo?.updateAvailability ==
-              UpdateAvailability.updateAvailable &&
-          _updateInfo?.immediateUpdateAllowed == false &&
-          _updateInfo?.flexibleUpdateAllowed == true) {
-        await InAppUpdate.startFlexibleUpdate();
-        await InAppUpdate.completeFlexibleUpdate();
-        print("Flexible update completed.");
-      }
-    } catch (e) {
-      print("Error during update check: $e");
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-        create: (context) => FontSize(),
-        child: Consumer<ThemeProvider>(builder: (context, value, child) {
+      create: (context) => FontSize(),
+      child: Consumer<ThemeProvider>(
+        builder: (context, value, child) {
           return GetMaterialApp(
             debugShowCheckedModeBanner: false,
             title: 'Ervadi Mawlid',
             theme: value.getTheme(),
-            home: MainScreen(),
+            home: UpgradeAlert(
+              showIgnore: false,
+              showLater: false,
+              shouldPopScope: () => false, // ❗ Prevent closing without update
+              child: MainScreen(),
+            ),
           );
-        }));
-
-    // locale: Locale('en', 'US'),
-    // routes: {
-    //   '/': (ctx) => HomePage(),
+        },
+      ),
+    );
   }
 }
+
+
 //flutter build appbundle --target-platform android-arm,android-arm64,android-x64 --no-sound-null-safety
 // flutter run --no-sound-null-safety
 //flutter build web --no-sound-null-safety

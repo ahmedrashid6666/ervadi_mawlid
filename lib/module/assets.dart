@@ -10,6 +10,12 @@ String splash = "assets/img/splashlogo.svg";
 String ervadi = "assets/img/ervadimoulid.svg";
 String sulthaniyyalogo = "assets/img/sulthaniyylg.svg";
 String sulthaniyya = "assets/img/sulthaniyy .svg";
+const Color amber = Color(0xFFFFC107);
+const Color blk = Color(0xFF282828);
+const Color ltWhite = Color(0xFFF5F5F5);
+const Color white = Colors.white;
+const Color brown = Color(0xFF3E2723);
+
 const mainColor = Color(0xff026000);
 const gradmainlt = [
   Color(0xff096637),
@@ -45,14 +51,8 @@ MaterialColor MWhithe = MaterialColor(0xEFFFFFFF, <int, Color>{
   900: Color(0xEFFFFFFF),
 });
 const red = Color(0xff9E1A1A);
-const ltWhite = Color.fromARGB(249, 241, 237, 237);
-const brown = Color(0xFF282828);
 const ltbrown = Color(0xFF424242);
-const white = Colors.white;
-const amber = Colors.amber;
 const trsnprnt = Colors.transparent;
-
-const blk = Colors.black;
 const transparent = Colors.transparent;
 
 String frstdua = '''

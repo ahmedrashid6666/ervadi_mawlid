@@ -1,6 +1,7 @@
 import 'package:ervadi/module/assets.dart';
 import 'package:ervadi/module/sidedrawer.dart';
 import 'package:ervadi/module/string.dart';
+import 'package:ervadi/module/translations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
@@ -10,7 +11,7 @@ import 'baith_contnt.dart';
 import 'module/radio_btn.dart';
 
 class FontSize with ChangeNotifier {
-  double _fontSize = 22;
+  double _fontSize = 25;
 
   double get fontSize => _fontSize;
 
@@ -27,7 +28,7 @@ class FontSize with ChangeNotifier {
 
   Future<void> loadFontSize() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    _fontSize = prefs.getDouble('fontSize') ?? 22;
+    _fontSize = prefs.getDouble('fontSize') ?? 25;
     notifyListeners();
   }
 
@@ -62,6 +63,10 @@ class _tabsBarPageState extends State<tabsBarPage>
     with TickerProviderStateMixin {
   late TabController _tabController;
   int currentTabIndex = 0;
+
+  // Add the selectedLanguage variable
+  String selectedLanguage = '';
+
   @override
   void initState() {
     super.initState();
@@ -73,7 +78,8 @@ class _tabsBarPageState extends State<tabsBarPage>
     _tabController.addListener(() {
       setState(() {}); // rebuild on tab change
     });
-    _loadTranslationToggle(widget.showTranslationNotifier);
+    _loadTranslationToggle();
+    _loadLanguagePreference();
   }
 
   void _saveTranslationToggle(bool value) async {
@@ -81,10 +87,26 @@ class _tabsBarPageState extends State<tabsBarPage>
     prefs.setBool('showTranslation', value);
   }
 
-  Future<void> _loadTranslationToggle(dynamic showTranslationNotifier) async {
+  Future<void> _loadTranslationToggle() async {
     final prefs = await SharedPreferences.getInstance();
-    bool show = prefs.getBool('showTranslation') ?? true;
-    showTranslationNotifier.value = show;
+    bool show = prefs.getBool('showTranslation') ??
+        false; // Default to false (no translation)
+    widget.showTranslationNotifier.value = show;
+  }
+
+  void _loadLanguagePreference() async {
+    final prefs = await SharedPreferences.getInstance();
+    String language = prefs.getString('selectedLanguage') ?? '';
+    print('Loaded language preference: $language');
+    setState(() {
+      selectedLanguage = language;
+    });
+  }
+
+  void _saveLanguagePreference(String language) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('selectedLanguage', language);
+    print('Saved language preference: $language');
   }
 
   @override
@@ -136,7 +158,7 @@ class _tabsBarPageState extends State<tabsBarPage>
             darkmode: widget.darkMode,
             no: '٥',
             img: nmbrborder,
-            tabtext: 'عَبَّاسْ مَنْترِي بَيت',
+            tabtext: 'عَبَّاسْ مَنْترِي بَيت',
           )),
           Tab(
               child: IconWithText(
@@ -167,7 +189,7 @@ class _tabsBarPageState extends State<tabsBarPage>
               line: false,
               no: '٩',
               img: nmbrborder,
-              tabtext: 'وَاهًا لِلْقُبَّةِ الْخَضْرَاءِ',
+              tabtext: 'وَاهًا لِلْقُبَّةِ الْخَضْرَاءِ',
             ),
           )),
         ],
@@ -187,9 +209,9 @@ class _tabsBarPageState extends State<tabsBarPage>
           shape: const CircularNotchedRectangle(),
           clipBehavior: Clip.antiAlias,
           elevation: 0,
-          padding: EdgeInsets.zero, // Remove BottomAppBar padding
+          padding: EdgeInsets.zero,
           child: Container(
-            width: double.infinity, // Use full available width
+            width: double.infinity,
             height: 75,
             padding: EdgeInsets.zero,
             margin: EdgeInsets.zero,
@@ -212,12 +234,12 @@ class _tabsBarPageState extends State<tabsBarPage>
                     alignment: Alignment.centerLeft,
                     padding: EdgeInsets.only(left: 15),
                     child: Row(children: [
+                      // Home button
                       Padding(
                         padding: const EdgeInsets.only(right: 15),
                         child: IconButton(
                           padding: EdgeInsets.zero,
-                          constraints:
-                              BoxConstraints(), // Remove default constraints
+                          constraints: BoxConstraints(),
                           icon: SvgPicture.asset(
                             home,
                             height: 20,
@@ -228,23 +250,119 @@ class _tabsBarPageState extends State<tabsBarPage>
                           },
                         ),
                       ),
-                      _tabController.index == 0
-                          ? IconButton(
-                              icon: Icon(Icons.translate),
-                              color: white,
-                              onPressed: () async {
-                                // Toggle the value
-                                showTranslationNotifier.value =
-                                    !showTranslationNotifier.value;
 
-                                // Save the updated value to SharedPreferences
-                                final prefs =
-                                    await SharedPreferences.getInstance();
-                                prefs.setBool('showTranslation',
-                                    showTranslationNotifier.value);
-                              },
-                            )
-                          : SizedBox.shrink(),
+                      // SINGLE Translation button - shows language selection
+                      PopupMenuButton<String>(
+                        icon: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(Icons.translate, color: white, size: 23),
+                            SizedBox(width: 4),
+                            Text(
+                              selectedLanguage.isNotEmpty
+                                  ? selectedLanguage
+                                      .substring(0, 2)
+                                      .toUpperCase()
+                                  : 'Lang',
+                              style: TextStyle(
+                                color: white,
+                                fontSize: 10,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        ),
+                        onSelected: (String language) async {
+                          print('Language selected: $language');
+
+                          setState(() {
+                            selectedLanguage = language;
+                          });
+
+                          if (language.isEmpty) {
+                            // Disable translation
+                            widget.showTranslationNotifier.value = false;
+                            _saveTranslationToggle(false);
+                            _saveLanguagePreference('');
+
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text('Translation disabled'),
+                                duration: Duration(seconds: 2),
+                              ),
+                            );
+                          } else {
+                            // Enable translation for selected language
+                            widget.showTranslationNotifier.value = true;
+                            _saveTranslationToggle(true);
+                            _saveLanguagePreference(language);
+
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content:
+                                    Text('Translation enabled for $language'),
+                                duration: Duration(seconds: 2),
+                              ),
+                            );
+                          }
+                        },
+                        itemBuilder: (BuildContext context) =>
+                            <PopupMenuEntry<String>>[
+                          // PopupMenuItem<String>(
+                          //   value: 'English',
+                          //   child: Row(
+                          //     children: [
+                          //       Icon(Icons.language, size: 20),
+                          //       SizedBox(width: 8),
+                          //       Text('English'),
+                          //       if (selectedLanguage == 'English') Spacer(),
+                          //       if (selectedLanguage == 'English')
+                          //         Icon(Icons.check, color: Colors.green),
+                          //     ],
+                          //   ),
+                          // ),
+                          PopupMenuItem<String>(
+                            value: 'Malayalam',
+                            child: Row(
+                              children: [
+                                Icon(Icons.language, size: 20),
+                                SizedBox(width: 8),
+                                Text('Malayalam'),
+                                if (selectedLanguage == 'Malayalam') Spacer(),
+                                if (selectedLanguage == 'Malayalam')
+                                  Icon(Icons.check, color: Colors.green),
+                              ],
+                            ),
+                          ),
+                          // PopupMenuItem<String>(
+                          //   value: 'Tamil',
+                          //   child: Row(
+                          //     children: [
+                          //       Icon(Icons.language, size: 20),
+                          //       SizedBox(width: 8),
+                          //       Text('Tamil'),
+                          //       if (selectedLanguage == 'Tamil') Spacer(),
+                          //       if (selectedLanguage == 'Tamil')
+                          //         Icon(Icons.check, color: Colors.green),
+                          //     ],
+                          //   ),
+                          // ),
+                          // Option to disable translation
+                          PopupMenuItem<String>(
+                            value: '',
+                            child: Row(
+                              children: [
+                                Icon(Icons.translate, size: 20),
+                                SizedBox(width: 8),
+                                Text('No Translation'),
+                                if (selectedLanguage.isEmpty) Spacer(),
+                                if (selectedLanguage.isEmpty)
+                                  Icon(Icons.check, color: Colors.green),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
                     ]),
                   ),
                 ),
@@ -316,49 +434,46 @@ class _tabsBarPageState extends State<tabsBarPage>
               return <Widget>[
                 Directionality(
                   textDirection: TextDirection.rtl,
-                  child: PreferredSize(
-                    preferredSize: const Size.fromHeight(95),
-                    child: SliverAppBar(
-                      toolbarHeight: 95,
-                      automaticallyImplyLeading: false,
-                      titleSpacing: 0,
-                      backgroundColor: widget.darkMode ? myColor : brown,
-                      flexibleSpace: Container(
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            colors: [
-                              Theme.of(context).colorScheme.primary,
-                              Theme.of(context).colorScheme.secondary,
-                            ],
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
-                          ),
+                  child: SliverAppBar(
+                    automaticallyImplyLeading: false,
+                    toolbarHeight: 95,
+                    titleSpacing: 0,
+                    backgroundColor: Theme.of(context).colorScheme.primary,
+                    flexibleSpace: Container(
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          colors: [
+                            Theme.of(context).colorScheme.primary,
+                            Theme.of(context).colorScheme.secondary,
+                          ],
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
                         ),
                       ),
-                      centerTitle: true,
-                      title: SvgPicture.asset(
-                        ervadi,
-                        height: 55,
-                        width: 55,
-                        color: white,
-                      ),
-                      actions: [
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Icon(
-                            Icons.menu,
-                            color: mainColor,
-                          ),
-                        )
-                      ],
-                      pinned: true,
-                      bottom: PreferredSize(
-                          preferredSize: _tabBar.preferredSize,
-                          child: ColoredBox(
-                            color: widget.darkMode ? white : ltWhite,
-                            child: _tabBar,
-                          )),
                     ),
+                    centerTitle: true,
+                    title: SvgPicture.asset(
+                      ervadi,
+                      height: 55,
+                      width: 55,
+                      color: white,
+                    ),
+                    actions: [
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Icon(
+                          Icons.menu,
+                          color: Theme.of(context).colorScheme.primary,
+                        ),
+                      )
+                    ],
+                    pinned: true,
+                    bottom: PreferredSize(
+                        preferredSize: _tabBar.preferredSize,
+                        child: ColoredBox(
+                          color: widget.darkMode ? white : ltWhite,
+                          child: _tabBar,
+                        )),
                   ),
                 )
               ];
@@ -366,20 +481,21 @@ class _tabsBarPageState extends State<tabsBarPage>
             body: TabBarView(
               controller: _tabController,
               children: <Widget>[
-                ValueListenableBuilder<bool>(
-                  valueListenable: widget.showTranslationNotifier,
-                  builder: (context, show, _) {
-                    return BaithContnt(
-                      darkMode: widget.darkMode,
-                      baithTxt: first,
-                      baithTxtTrans: firsttrans,
-                      transbutton: true,
-                      showTranslationNotifier: showTranslationNotifier,
-                      onChanged: (double) {},
-                    );
+                // FIXED: Pass the correct selectedLanguage to BaithContnt
+                BaithContnt(
+                  selectedLanguage: selectedLanguage,
+                  darkMode: widget.darkMode,
+                  baithTxt: first, // Make sure 'first' is defined
+                  baithTxtTrans:
+                      TranslationData.getTranslation(selectedLanguage),
+                  transbutton: true,
+                  showTranslationNotifier: widget.showTranslationNotifier,
+                  onChanged: (double value) {
+                    // Handle font size change if needed
                   },
                 ),
                 BaithContnt(
+                  selectedLanguage: selectedLanguage,
                   darkMode: widget.darkMode,
                   baithTxt: scnd,
                   baithTxtTrans: firsttrans,
@@ -392,6 +508,7 @@ class _tabsBarPageState extends State<tabsBarPage>
                   },
                 ),
                 BaithContnt(
+                  selectedLanguage: selectedLanguage,
                   darkMode: widget.darkMode,
                   baithTxt: thrd,
                   baithTxtTrans: firsttrans,
@@ -404,6 +521,7 @@ class _tabsBarPageState extends State<tabsBarPage>
                   },
                 ),
                 BaithContnt(
+                  selectedLanguage: selectedLanguage,
                   darkMode: widget.darkMode,
                   baithTxt: frth,
                   baithTxtTrans: firsttrans,
@@ -416,6 +534,7 @@ class _tabsBarPageState extends State<tabsBarPage>
                   },
                 ),
                 BaithContnt(
+                  selectedLanguage: selectedLanguage,
                   darkMode: widget.darkMode,
                   baithTxt: fifth,
                   baithTxtTrans: firsttrans,
@@ -428,6 +547,7 @@ class _tabsBarPageState extends State<tabsBarPage>
                   },
                 ),
                 BaithContnt(
+                  selectedLanguage: selectedLanguage,
                   darkMode: widget.darkMode,
                   baithTxt: sixth,
                   baithTxtTrans: firsttrans,
@@ -440,6 +560,7 @@ class _tabsBarPageState extends State<tabsBarPage>
                   },
                 ),
                 BaithContnt(
+                  selectedLanguage: selectedLanguage,
                   darkMode: widget.darkMode,
                   baithTxt: aameen,
                   baithTxtTrans: firsttrans,
@@ -452,6 +573,7 @@ class _tabsBarPageState extends State<tabsBarPage>
                   },
                 ),
                 BaithContnt(
+                  selectedLanguage: selectedLanguage,
                   darkMode: widget.darkMode,
                   baithTxt: yaAkrama,
                   baithTxtTrans: firsttrans,
@@ -464,6 +586,7 @@ class _tabsBarPageState extends State<tabsBarPage>
                   },
                 ),
                 BaithContnt(
+                  selectedLanguage: selectedLanguage,
                   darkMode: widget.darkMode,
                   baithTxt: kundoor,
                   baithTxtTrans: firsttrans,
