@@ -184,7 +184,7 @@ class _tabsBarPageState extends State<tabsBarPage>
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   TabBar get _tabBar => TabBar(
         tabAlignment: TabAlignment.start,
-        indicatorColor: blk,
+        indicatorColor: widget.isDarkTheme ? white : blk,
         padding: EdgeInsets.zero,
         labelPadding: EdgeInsets.only(top: 5, bottom: 5, right: 5),
         controller: _tabController,
@@ -623,7 +623,7 @@ class _tabsBarPageState extends State<tabsBarPage>
                     bottom: PreferredSize(
                         preferredSize: _tabBar.preferredSize,
                         child: ColoredBox(
-                          color: widget.isDarkTheme ? white : ltWhite,
+                          color: widget.isDarkTheme ? blk : ltWhite,
                           child: _tabBar,
                         )),
                   ),
@@ -761,7 +761,7 @@ class _BottomModalSheetState extends State<BottomModalSheet> {
           topRight: Radius.circular(30.0),
         ),
         child: Container(
-          height: MediaQuery.of(context).size.height * 0.3,
+          height: MediaQuery.of(context).size.height * 0.4, // Increased height
           width: double.infinity,
           decoration: BoxDecoration(
             color: Theme.of(context).colorScheme.primary,
@@ -775,10 +775,22 @@ class _BottomModalSheetState extends State<BottomModalSheet> {
             child: Column(
               children: [
                 const Text(
-                  'Font Size',
+                  'Options',
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 10),
+                RadioBtn(isDarkTheme: widget.isDarkTheme),
+                const Divider(color: Colors.white24, thickness: 1),
+                const SizedBox(height: 10),
+                const Text(
+                  'Font Size',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -834,7 +846,7 @@ class IconWithText extends StatelessWidget {
               SvgPicture.asset(
                 img,
                 height: 35,
-                color: isDarkTheme ? white : ltWhite,
+                color: isDarkTheme ? white : blk, // Now uses blk in light mode
               ),
               Text(
                 no,
@@ -852,7 +864,7 @@ class IconWithText extends StatelessWidget {
             style: TextStyle(
               fontFamily: 'lpmq',
               fontSize: 18,
-              color: isDarkTheme ? white : ltWhite,
+              color: isDarkTheme ? white : blk, // Now uses blk in light mode
             ),
           ),
           if (line) ...[
