@@ -845,16 +845,20 @@ class IconWithText extends StatelessWidget {
             children: [
               SvgPicture.asset(
                 img,
-                height: 35,
-                color: isDarkTheme ? white : blk, // Now uses blk in light mode
+                height: 42, // Balanced icon size
+                color: isDarkTheme ? white : blk,
               ),
-              Text(
-                no,
-                style: const TextStyle(
+              Transform.translate(
+                offset: const Offset(0, -5), // Nudge up significantly to center
+                child: Text(
+                  no,
+                  style: const TextStyle(
                     fontFamily: 'Uthmanic',
-                    fontSize: 20,
+                    fontSize: 26, // Large, readable font size
                     fontWeight: FontWeight.bold,
-                    color: Colors.amber),
+                    color: Colors.amber,
+                  ),
+                ),
               ),
             ],
           ),
