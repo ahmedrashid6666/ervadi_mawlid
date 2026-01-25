@@ -52,6 +52,14 @@
             appRunner.runApp();
           });
         }
+      }).then(function(loader) {
+        // Handle service worker updates automatically
+        if ('serviceWorker' in navigator) {
+          navigator.serviceWorker.addEventListener('controllerchange', function() {
+            // Reload the page when the service worker is updated
+            window.location.reload();
+          });
+        }
       });
     });
   </script>

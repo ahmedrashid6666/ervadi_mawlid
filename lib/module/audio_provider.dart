@@ -10,7 +10,7 @@ class AudioProvider with ChangeNotifier {
 
   // Audio URL base
   static const String audioBaseUrl =
-      'https://ervadimawlid.harkcreation.com/ervadimawlid/audio/';
+      'https://ervadimawlid.harkcreation.com/audio/';
 
   // Audio filenames mapping to tab indices (1-indexed based on baith number)
   final List<String> _audioFiles = [
@@ -42,6 +42,7 @@ class AudioProvider with ChangeNotifier {
       print("Error loading audio: $e");
       _isPlayerReady = false;
       notifyListeners();
+      rethrow;
     }
   }
 
