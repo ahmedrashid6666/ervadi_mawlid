@@ -412,7 +412,7 @@ class _tabsBarPageState extends State<tabsBarPage>
                     color: white,
                   ),
                   onPressed: () {
-                    _scaffoldKey.currentState!.openEndDrawer();
+                    _scaffoldKey.currentState?.openEndDrawer();
                   },
                 )
               ],

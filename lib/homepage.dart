@@ -43,130 +43,130 @@ class _MainScreenState extends State<MainScreen> {
       resizeToAvoidBottomInset: true,
       drawerEdgeDragWidth: 0,
       key: _scaffoldKey,
-      endDrawer: Container(
-        width: 270,
-        child: Drawer(
-          backgroundColor: Theme.of(context).colorScheme.primary,
-          child: ListView(
-            padding: EdgeInsets.zero,
-            children: <Widget>[
-              SizedBox(
-                height: 240,
-                child: DrawerHeader(
-                    padding: EdgeInsets.zero,
-                    child: Container(
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            colors: [
-                              Theme.of(context).colorScheme.primary,
-                              Theme.of(context).colorScheme.secondary,
-                            ],
-                            begin: Alignment.topLeft,
-                            end: Alignment.topRight,
-                          ),
-                        ),
-                        child: Center(
-                          // child: Text(
-                          //   'يروآدي مولد',
-                          //   style: TextStyle(
-                          //       color: ltWhite,
-                          //       fontSize: 25,
-                          //       fontFamily: 'lpmq'),
-                          // ),
-                          child: SvgPicture.asset(
-                            ervadi,
-                            height: 50,
-                            color: white,
-                          ),
-                        ))),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(right: 15, left: 15),
-                child: Divider(
-                  height: 6,
-                  thickness: 0.2,
-                  color: white,
-                ),
-              ),
-              ListTile(
-                leading: Icon(
-                  Icons.input,
-                  color: Theme.of(context).hintColor,
-                ),
-                title: Text(
-                  'Share App',
-                  style: TextStyle(
-                      color: Theme.of(context).hintColor,
-                      fontSize: 18,
-                      fontFamily: 'lpmq',
-                      fontWeight: FontWeight.w800),
-                ),
-                onTap: () => {
-                  Share.share(
-                    '*Ervadi Mawlid*: https://play.google.com/store/apps/details?id=in.mawlid.ervadi',
-                  ),
-                  Get.back()
-                },
-              ),
-              ListTile(
-                leading: Icon(
-                  Icons.system_update,
-                  color: Theme.of(context).hintColor,
-                ),
-                title: Text(
-                  'Check For Update',
-                  style: TextStyle(
-                      color: Theme.of(context).hintColor,
-                      fontSize: 18,
-                      fontFamily: 'lpmq',
-                      fontWeight: FontWeight.w800),
-                ),
-                onTap: () => {
-                  launch(
-                      'https://play.google.com/store/apps/details?id=in.mawlid.ervadi'),
-                  Get.back()
-                },
-              ),
-              ListTile(
-                  leading: Icon(
-                    Icons.message,
-                    color: Theme.of(context).hintColor,
-                  ),
-                  title: Text(
-                    'Feedback',
-                    style: TextStyle(
-                        color: Theme.of(context).hintColor,
-                        fontSize: 18,
-                        fontFamily: 'lpmq',
-                        fontWeight: FontWeight.w800),
-                  ),
-                  onTap: () {
-                    launch(
-                        'https://wa.me/+918075703855/?text=Ervadi%20Mawlid%20App%20feedback%20');
-                    Get.back();
-                  }),
-              ListTile(
-                leading: Icon(
-                  Icons.info,
-                  color: Theme.of(context).hintColor,
-                ),
-                title: Text(
-                  'About',
-                  style: TextStyle(
-                      color: Theme.of(context).hintColor,
-                      fontSize: 18,
-                      fontFamily: 'lpmq',
-                      fontWeight: FontWeight.w800),
-                ),
-                onTap: () {
-                  Get.back();
-                  Get.to(() => AboutPage());
-                },
-              ),
-            ],
-          ),
-        ),
-      ),
+      // endDrawer: Container(
+      //   width: 270,
+      //   child: Drawer(
+      //     backgroundColor: Theme.of(context).colorScheme.primary,
+      //     child: ListView(
+      //       padding: EdgeInsets.zero,
+      //       children: <Widget>[
+      //         SizedBox(
+      //           height: 240,
+      //           child: DrawerHeader(
+      //               padding: EdgeInsets.zero,
+      //               child: Container(
+      //                   decoration: BoxDecoration(
+      //                     gradient: LinearGradient(
+      //                       colors: [
+      //                         Theme.of(context).colorScheme.primary,
+      //                         Theme.of(context).colorScheme.secondary,
+      //                       ],
+      //                       begin: Alignment.topLeft,
+      //                       end: Alignment.topRight,
+      //                     ),
+      //                   ),
+      //                   child: Center(
+      //                     // child: Text(
+      //                     //   'يروآدي مولد',
+      //                     //   style: TextStyle(
+      //                     //       color: ltWhite,
+      //                     //       fontSize: 25,
+      //                     //       fontFamily: 'lpmq'),
+      //                     // ),
+      //                     child: SvgPicture.asset(
+      //                       ervadi,
+      //                       height: 50,
+      //                       color: white,
+      //                     ),
+      //                   ))),
+      //         ),
+      //         Padding(
+      //           padding: const EdgeInsets.only(right: 15, left: 15),
+      //           child: Divider(
+      //             height: 6,
+      //             thickness: 0.2,
+      //             color: white,
+      //           ),
+      //         ),
+      //         ListTile(
+      //           leading: Icon(
+      //             Icons.input,
+      //             color: Theme.of(context).hintColor,
+      //           ),
+      //           title: Text(
+      //             'Share App',
+      //             style: TextStyle(
+      //                 color: Theme.of(context).hintColor,
+      //                 fontSize: 18,
+      //                 fontFamily: 'lpmq',
+      //                 fontWeight: FontWeight.w800),
+      //           ),
+      //           onTap: () => {
+      //             Share.share(
+      //               '*Ervadi Mawlid*: https://play.google.com/store/apps/details?id=in.mawlid.ervadi',
+      //             ),
+      //             Get.back()
+      //           },
+      //         ),
+      //         ListTile(
+      //           leading: Icon(
+      //             Icons.system_update,
+      //             color: Theme.of(context).hintColor,
+      //           ),
+      //           title: Text(
+      //             'Check For Update',
+      //             style: TextStyle(
+      //                 color: Theme.of(context).hintColor,
+      //                 fontSize: 18,
+      //                 fontFamily: 'lpmq',
+      //                 fontWeight: FontWeight.w800),
+      //           ),
+      //           onTap: () => {
+      //             launch(
+      //                 'https://play.google.com/store/apps/details?id=in.mawlid.ervadi'),
+      //             Get.back()
+      //           },
+      //         ),
+      //         ListTile(
+      //             leading: Icon(
+      //               Icons.message,
+      //               color: Theme.of(context).hintColor,
+      //             ),
+      //             title: Text(
+      //               'Feedback',
+      //               style: TextStyle(
+      //                   color: Theme.of(context).hintColor,
+      //                   fontSize: 18,
+      //                   fontFamily: 'lpmq',
+      //                   fontWeight: FontWeight.w800),
+      //             ),
+      //             onTap: () {
+      //               launch(
+      //                   'https://wa.me/+918075703855/?text=Ervadi%20Mawlid%20App%20feedback%20');
+      //               Get.back();
+      //             }),
+      //         ListTile(
+      //           leading: Icon(
+      //             Icons.info,
+      //             color: Theme.of(context).hintColor,
+      //           ),
+      //           title: Text(
+      //             'About',
+      //             style: TextStyle(
+      //                 color: Theme.of(context).hintColor,
+      //                 fontSize: 18,
+      //                 fontFamily: 'lpmq',
+      //                 fontWeight: FontWeight.w800),
+      //           ),
+      //           onTap: () {
+      //             Get.back();
+      //             Get.to(() => AboutPage());
+      //           },
+      //         ),
+      //       ],
+      //     ),
+      //   ),
+      // ),
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: SafeArea(
         child: Directionality(
@@ -225,30 +225,31 @@ class _MainScreenState extends State<MainScreen> {
                         style: ElevatedButton.styleFrom(
                           padding: EdgeInsets.zero,
                           shape: CircleBorder(),
-                          // Button color
                           backgroundColor: Colors.black12,
-                          // Splash color
                         ),
                       ),
                     )),
                 flexibleSpace: FlexibleSpaceBar(
-                  // Make sure title is centered horizontally
-                  titlePadding: EdgeInsets.only(
-                      bottom: 0, right: 48), // Adjust this if needed
+                  titlePadding: EdgeInsets.only(bottom: 0, right: 48),
                   title: SvgPicture.asset(
                     ervadi,
                     height: 40,
                     width: 40,
                     color: Colors.amberAccent,
                   ),
-
                   background: Stack(
                     fit: StackFit.expand,
                     children: <Widget>[
-                      SvgPicture.asset(
-                        ervadi,
-                        color: Colors.amberAccent,
-                        fit: BoxFit.contain,
+                      Center(
+                        child: SizedBox(
+                          width: 200,
+                          height: 200,
+                          child: SvgPicture.asset(
+                            ervadi,
+                            color: Colors.amberAccent,
+                            fit: BoxFit.contain,
+                          ),
+                        ),
                       ),
                       const DecoratedBox(
                         decoration: BoxDecoration(
@@ -375,9 +376,9 @@ class _MainScreenState extends State<MainScreen> {
           ),
         ),
       ),
-      floatingActionButton: ExpandableFAB(
-        isDarkTheme: isDarkTheme,
-      ),
+      // floatingActionButton: ExpandableFAB(
+      //   isDarkTheme: isDarkTheme,
+      // ),
     );
   }
 
@@ -456,7 +457,8 @@ Container Detailed1(
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                       textDirection: TextDirection.rtl,
-                      style: (theme.textTheme.titleMedium ?? TextStyle()).copyWith(
+                      style:
+                          (theme.textTheme.titleMedium ?? TextStyle()).copyWith(
                         fontSize: screenWidth * 0.058,
                         color: isDarkTheme
                             ? Colors.white
@@ -498,32 +500,52 @@ Container Detailed1(
                       ),
                     ],
                   ),
-                  child: Stack(
-                    alignment: Alignment.center,
-                    children: [
-                      // Background SVG (if needed)
-                      if (nmbrborder.isNotEmpty)
-                        SvgPicture.asset(
-                          nmbrborder,
-                          width: screenWidth * 0.09,
-                          color: isDarkTheme
-                              ? Colors.black.withOpacity(0.2)
-                              : Colors.white.withOpacity(0.3),
-                          fit: BoxFit.fitHeight,
+                  // child: Center(
+                  //   child: Text(
+                  //     no,
+                  //     style: TextStyle(
+                  //       fontSize: screenWidth * 0.058,
+                  //       fontWeight: FontWeight.w900,
+                  //       color: isDarkTheme ? Colors.black : Colors.white,
+                  //       fontFamily: 'lpmq',
+                  //       letterSpacing: 0.5,
+                  //     ),
+                  //     textAlign: TextAlign.center,
+                  //   ),
+                  // ),
+                  child: SizedBox(
+                    width: screenWidth * 0.12,
+                    height: screenWidth * 0.12,
+                    child: Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        // Background SVG (if needed)
+                        if (nmbrborder.isNotEmpty)
+                          SizedBox(
+                            width: screenWidth * 0.09,
+                            height: screenWidth * 0.09,
+                            child: SvgPicture.asset(
+                              nmbrborder,
+                              color: isDarkTheme
+                                  ? Colors.black.withOpacity(0.2)
+                                  : Colors.white.withOpacity(0.3),
+                              fit: BoxFit.contain,
+                            ),
+                          ),
+                        // Number Text
+                        Text(
+                          no,
+                          style: TextStyle(
+                            fontSize: screenWidth * 0.058,
+                            fontWeight: FontWeight.w900,
+                            color: isDarkTheme ? Colors.black : Colors.white,
+                            fontFamily: 'lpmq',
+                            letterSpacing: 0.5,
+                          ),
+                          textAlign: TextAlign.center,
                         ),
-                      // Number Text
-                      Text(
-                        no,
-                        style: TextStyle(
-                          fontSize: screenWidth * 0.058,
-                          fontWeight: FontWeight.w900,
-                          color: isDarkTheme ? Colors.black : Colors.white,
-                          fontFamily: 'lpmq',
-                          letterSpacing: 0.5,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               ],
