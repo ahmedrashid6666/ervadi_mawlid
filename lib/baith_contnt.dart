@@ -35,7 +35,9 @@ class BaithContnt extends StatefulWidget {
 class _BaithContntState extends State<BaithContnt> {
   final ScrollController _scrollController = ScrollController();
   Timer? _autoScrollTimer;
+  Timer? _resumeTimer;
   double _scrollSpeed = 0.0; // pixels per tick; 0 = stopped
+  bool _userInteracting = false; // true while the user is dragging manually
 
   @override
   void initState() {
@@ -66,8 +68,38 @@ class _BaithContntState extends State<BaithContnt> {
   @override
   void dispose() {
     _autoScrollTimer?.cancel();
+    _resumeTimer?.cancel();
     _scrollController.dispose();
     super.dispose();
+  }
+
+  // Pauses auto-scroll while the user drags, and resumes it after they let go.
+  bool _handleUserScroll(ScrollNotification notification) {
+    if (notification is ScrollStartNotification &&
+        notification.dragDetails != null) {
+      // User physically grabbed the list.
+      _userInteracting = true;
+      _resumeTimer?.cancel();
+    } else if (notification is ScrollEndNotification && _userInteracting) {
+      // User released; resume after a short pause (also lets any fling settle).
+      _scheduleResume();
+    }
+    return false;
+  }
+
+  void _scheduleResume() {
+    _resumeTimer?.cancel();
+    _resumeTimer = Timer(const Duration(milliseconds: 800), () {
+      if (!mounted) return;
+      // If the list is still coasting from a fling, wait a bit more.
+      if (_scrollController.hasClients &&
+          _scrollController.position.isScrollingNotifier.value) {
+        _scheduleResume();
+        return;
+      }
+      _userInteracting = false;
+      if (_scrollSpeed > 0) _startAutoScroll();
+    });
   }
 
   Future<void> _loadSpeed() async {
@@ -91,6 +123,8 @@ class _BaithContntState extends State<BaithContnt> {
     // smaller duration for smoother movement; adjust if needed
     _autoScrollTimer = Timer.periodic(const Duration(milliseconds: 50), (t) {
       if (!_scrollController.hasClients) return;
+      // Don't fight the user while they're dragging manually.
+      if (_userInteracting) return;
       final max = _scrollController.position.maxScrollExtent;
       final current = _scrollController.offset;
       final next = (current + _scrollSpeed).clamp(0.0, max);
@@ -118,31 +152,170 @@ class _BaithContntState extends State<BaithContnt> {
         children: [
           // Original ListView but using _scrollController
           Expanded(
-            child: ListView.builder(
-              controller: _scrollController,
-              padding: const EdgeInsets.only(bottom: 75),
-              physics: const BouncingScrollPhysics(),
-              itemCount: widget.baithTxt.length,
-              itemBuilder: (context, index) {
-                int indexPlus = index + 1;
+            child: NotificationListener<ScrollNotification>(
+              onNotification: _handleUserScroll,
+              child: ListView.builder(
+                controller: _scrollController,
+                padding: const EdgeInsets.only(top: 6, bottom: 75),
+                physics: const BouncingScrollPhysics(),
+                itemCount: widget.baithTxt.length,
+                itemBuilder: (context, index) {
+                  int indexPlus = index + 1;
 
-                // Keep your original color logic and structure intact:
-                if (index < 2) {
-                  return Container(
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: [
-                          Theme.of(context).colorScheme.primary,
-                          Theme.of(context).colorScheme.secondary,
-                        ],
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
+                  // First two lines are the green "header" couplet; the rest are
+                  // white content tiles. Both are now rounded cards with margin.
+                  if (index < 2) {
+                    return Container(
+                      margin: const EdgeInsets.symmetric(
+                          horizontal: 8, vertical: 5),
+                      clipBehavior: Clip.antiAlias,
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          colors: [
+                            Theme.of(context).colorScheme.primary,
+                            Theme.of(context).colorScheme.secondary,
+                          ],
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                        ),
+                        borderRadius: BorderRadius.circular(16),
+                        border: Border.all(
+                          color: white.withOpacity(0.15),
+                          width: 1,
+                        ),
                       ),
-                    ),
-                    child: Column(
-                      children: [
-                        ListTile(
-                            title: Padding(
+                      child: ListTile(
+                          title: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 3, vertical: 8),
+                        child: indexPlus.isOdd
+                            ? Column(
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                children: [
+                                  Row(
+                                    textDirection: TextDirection.rtl,
+                                    children: [
+                                      Expanded(
+                                        child: Consumer<FontSize>(
+                                          builder:
+                                              (context, fontSize, child) {
+                                            return Text(
+                                              widget.baithTxt[index],
+                                              style: TextStyle(
+                                                fontFamily: 'Amiri',
+                                                fontWeight: FontWeight.bold,
+                                                color: white, // <- unchanged
+                                                fontSize: fontSize.fontSize,
+                                              ),
+                                              textDirection:
+                                                  TextDirection.rtl,
+                                            );
+                                          },
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  // Translation, only if toggled ON
+                                  ValueListenableBuilder<bool>(
+                                    valueListenable:
+                                        widget.showTranslationNotifier,
+                                    builder:
+                                        (context, showTranslation, child) {
+                                      if (!showTranslation)
+                                        return const SizedBox();
+                                      return Padding(
+                                        padding:
+                                            const EdgeInsets.only(top: 8.0),
+                                        child: Text(
+                                          TranslationData.getTranslation(
+                                              widget.selectedLanguage)[index],
+                                          style: const TextStyle(
+                                            color: Colors.white70,
+                                            fontSize: 16,
+                                          ),
+                                          textDirection: TextDirection.ltr,
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                ],
+                              )
+                            : Column(
+                                children: [
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    textDirection: TextDirection.ltr,
+                                    children: [
+                                      Expanded(
+                                        child: Consumer<FontSize>(
+                                          builder:
+                                              (context, fontSize, child) {
+                                            return Text(
+                                              widget.baithTxt[index],
+                                              style: TextStyle(
+                                                fontFamily: 'Amiri',
+                                                fontWeight: FontWeight.bold,
+                                                color: white, // <- unchanged
+                                                fontSize: fontSize.fontSize,
+                                              ),
+                                              textDirection:
+                                                  TextDirection.ltr,
+                                            );
+                                          },
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  // Translation, only if toggled ON
+                                  ValueListenableBuilder<bool>(
+                                    valueListenable:
+                                        widget.showTranslationNotifier,
+                                    builder:
+                                        (context, showTranslation, child) {
+                                      if (!showTranslation)
+                                        return const SizedBox();
+                                      return Align(
+                                        alignment: Alignment.centerLeft,
+                                        child: Padding(
+                                          padding:
+                                              const EdgeInsets.only(top: 8.0),
+                                          child: Text(
+                                            TranslationData.getTranslation(
+                                                widget.selectedLanguage)[
+                                                index],
+                                            style: const TextStyle(
+                                              color: Colors.white70,
+                                              fontSize: 16,
+                                            ),
+                                            textDirection: TextDirection.ltr,
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                ],
+                              ),
+                      )),
+                    );
+                  } else {
+                    return Container(
+                      margin: const EdgeInsets.symmetric(
+                          horizontal: 8, vertical: 5),
+                      clipBehavior: Clip.antiAlias,
+                      decoration: BoxDecoration(
+                        color: Theme.of(context).colorScheme.background,
+                        borderRadius: BorderRadius.circular(16),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.06),
+                            blurRadius: 6,
+                            offset: const Offset(0, 2),
+                          ),
+                        ],
+                      ),
+                      child: ListTile(
+                        title: Padding(
                           padding: const EdgeInsets.symmetric(
                               horizontal: 3, vertical: 8),
                           child: indexPlus.isOdd
@@ -150,27 +323,28 @@ class _BaithContntState extends State<BaithContnt> {
                                   crossAxisAlignment: CrossAxisAlignment.end,
                                   children: [
                                     Row(
-                                      textDirection: TextDirection.rtl,
-                                      children: [
-                                        Expanded(
-                                          child: Consumer<FontSize>(
+                                        textDirection: TextDirection.rtl,
+                                        children: [
+                                          Expanded(
+                                              child: Consumer<FontSize>(
                                             builder:
-                                                (context, fontSize, child) {
+                                                (context, provider, child) {
                                               return Text(
                                                 widget.baithTxt[index],
                                                 style: TextStyle(
-                                                  fontFamily: 'lpmq',
-                                                  color: white, // <- unchanged
+                                                  fontFamily: 'Amiri',
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Theme.of(context)
+                                                      .primaryColorDark, // <- unchanged
                                                   fontSize: fontSize.fontSize,
                                                 ),
                                                 textDirection:
                                                     TextDirection.rtl,
                                               );
                                             },
-                                          ),
-                                        ),
-                                      ],
-                                    ),
+                                          ))
+                                        ]),
+
                                     // Translation, only if toggled ON
                                     ValueListenableBuilder<bool>(
                                       valueListenable:
@@ -184,9 +358,11 @@ class _BaithContntState extends State<BaithContnt> {
                                               const EdgeInsets.only(top: 8.0),
                                           child: Text(
                                             TranslationData.getTranslation(
-                                                widget.selectedLanguage)[index],
-                                            style: const TextStyle(
-                                              color: Colors.white70,
+                                                widget.selectedLanguage)[
+                                                index],
+                                            style: TextStyle(
+                                              color: Theme.of(context)
+                                                  .primaryColorDark, // <- unchanged
                                               fontSize: 16,
                                             ),
                                             textDirection: TextDirection.ltr,
@@ -199,19 +375,18 @@ class _BaithContntState extends State<BaithContnt> {
                               : Column(
                                   children: [
                                     Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceEvenly,
-                                      textDirection: TextDirection.ltr,
-                                      children: [
-                                        Expanded(
-                                          child: Consumer<FontSize>(
+                                        textDirection: TextDirection.ltr,
+                                        children: [
+                                          Consumer<FontSize>(
                                             builder:
-                                                (context, fontSize, child) {
+                                                (context, provider, child) {
                                               return Text(
                                                 widget.baithTxt[index],
                                                 style: TextStyle(
-                                                  fontFamily: 'lpmq',
-                                                  color: white, // <- unchanged
+                                                  fontFamily: 'Amiri',
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Theme.of(context)
+                                                      .primaryColorDark, // <- unchanged
                                                   fontSize: fontSize.fontSize,
                                                 ),
                                                 textDirection:
@@ -219,9 +394,7 @@ class _BaithContntState extends State<BaithContnt> {
                                               );
                                             },
                                           ),
-                                        ),
-                                      ],
-                                    ),
+                                        ]),
                                     // Translation, only if toggled ON
                                     ValueListenableBuilder<bool>(
                                       valueListenable:
@@ -237,10 +410,11 @@ class _BaithContntState extends State<BaithContnt> {
                                                 const EdgeInsets.only(top: 8.0),
                                             child: Text(
                                               TranslationData.getTranslation(
-                                                  widget
-                                                      .selectedLanguage)[index],
-                                              style: const TextStyle(
-                                                color: Colors.white70,
+                                                  widget.selectedLanguage)[
+                                                  index],
+                                              style: TextStyle(
+                                                color: Theme.of(context)
+                                                    .primaryColorDark, // <- unchanged
                                                 fontSize: 16,
                                               ),
                                               textDirection: TextDirection.ltr,
@@ -251,144 +425,12 @@ class _BaithContntState extends State<BaithContnt> {
                                     ),
                                   ],
                                 ),
-                        )),
-                        Divider(
-                          height: 1,
-                          thickness: 0.1,
-                          color: widget.isDarkTheme
-                              ? white
-                              : ltWhite, // <- unchanged
-                        )
-                      ],
-                    ),
-                  );
-                } else {
-                  return Container(
-                    color: Theme.of(context).colorScheme.background,
-                    child: Column(
-                      children: [
-                        ListTile(
-                          title: Padding(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 3, vertical: 8),
-                            child: indexPlus.isOdd
-                                ? Column(
-                                    crossAxisAlignment: CrossAxisAlignment.end,
-                                    children: [
-                                      Row(
-                                          textDirection: TextDirection.rtl,
-                                          children: [
-                                            Expanded(child: Consumer<FontSize>(
-                                              builder:
-                                                  (context, provider, child) {
-                                                return Text(
-                                                  widget.baithTxt[index],
-                                                  style: TextStyle(
-                                                    fontFamily: 'lpmq',
-                                                    color: Theme.of(context)
-                                                        .primaryColorDark, // <- unchanged
-                                                    fontSize: fontSize.fontSize,
-                                                  ),
-                                                  textDirection:
-                                                      TextDirection.rtl,
-                                                );
-                                              },
-                                            ))
-                                          ]),
-
-                                      // Translation, only if toggled ON
-                                      ValueListenableBuilder<bool>(
-                                        valueListenable:
-                                            widget.showTranslationNotifier,
-                                        builder:
-                                            (context, showTranslation, child) {
-                                          if (!showTranslation)
-                                            return const SizedBox();
-                                          return Padding(
-                                            padding:
-                                                const EdgeInsets.only(top: 8.0),
-                                            child: Text(
-                                              TranslationData.getTranslation(
-                                                  widget
-                                                      .selectedLanguage)[index],
-                                              style: TextStyle(
-                                                color: Theme.of(context)
-                                                    .primaryColorDark, // <- unchanged
-                                                fontSize: 16,
-                                              ),
-                                              textDirection: TextDirection.ltr,
-                                            ),
-                                          );
-                                        },
-                                      ),
-                                    ],
-                                  )
-                                : Column(
-                                    children: [
-                                      Row(
-                                          textDirection: TextDirection.ltr,
-                                          children: [
-                                            Consumer<FontSize>(
-                                              builder:
-                                                  (context, provider, child) {
-                                                return Text(
-                                                  widget.baithTxt[index],
-                                                  style: TextStyle(
-                                                    fontFamily: 'lpmq',
-                                                    color: Theme.of(context)
-                                                        .primaryColorDark, // <- unchanged
-                                                    fontSize: fontSize.fontSize,
-                                                  ),
-                                                  textDirection:
-                                                      TextDirection.ltr,
-                                                );
-                                              },
-                                            ),
-                                          ]),
-                                      // Translation, only if toggled ON
-                                      ValueListenableBuilder<bool>(
-                                        valueListenable:
-                                            widget.showTranslationNotifier,
-                                        builder:
-                                            (context, showTranslation, child) {
-                                          if (!showTranslation)
-                                            return const SizedBox();
-                                          return Align(
-                                            alignment: Alignment.centerLeft,
-                                            child: Padding(
-                                              padding: const EdgeInsets.only(
-                                                  top: 8.0),
-                                              child: Text(
-                                                TranslationData.getTranslation(
-                                                        widget
-                                                            .selectedLanguage)[
-                                                    index],
-                                                style: TextStyle(
-                                                  color: Theme.of(context)
-                                                      .primaryColorDark, // <- unchanged
-                                                  fontSize: 16,
-                                                ),
-                                                textDirection:
-                                                    TextDirection.ltr,
-                                              ),
-                                            ),
-                                          );
-                                        },
-                                      ),
-                                    ],
-                                  ),
-                          ),
                         ),
-                        Divider(
-                          height: 1,
-                          thickness: 0.1,
-                          color: widget.isDarkTheme ? blk : blk, // <- unchanged
-                        )
-                      ],
-                    ),
-                  );
-                }
-              },
+                      ),
+                    );
+                  }
+                },
+              ),
             ),
           ),
           // Right-side vertical slider with fixed width

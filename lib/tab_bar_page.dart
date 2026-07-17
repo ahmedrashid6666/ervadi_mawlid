@@ -14,7 +14,10 @@ import 'package:audio_video_progress_bar/audio_video_progress_bar.dart';
 import 'package:just_audio/just_audio.dart';
 
 class FontSize with ChangeNotifier {
-  double _fontSize = 25;
+  // Bigger, bolder default. Kept within the slider range [minFontSize, maxFontSize].
+  static const double minFontSize = 20;
+  static const double maxFontSize = 44;
+  double _fontSize = 30;
 
   double get fontSize => _fontSize;
 
@@ -31,7 +34,10 @@ class FontSize with ChangeNotifier {
 
   Future<void> loadFontSize() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    _fontSize = prefs.getDouble('fontSize') ?? 25;
+    final saved = prefs.getDouble('fontSize') ?? 30;
+    // Clamp any previously-saved value into the current slider range so the
+    // Slider never receives a value below its min (which would assert/crash).
+    _fontSize = saved.clamp(minFontSize, maxFontSize);
     notifyListeners();
   }
 
@@ -138,9 +144,8 @@ class _tabsBarPageState extends State<tabsBarPage>
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Error loading audio: $e'),
-            backgroundColor: Colors.red,
+          const SnackBar(
+            content: Text('No audio added for this baith'),
             behavior: SnackBarBehavior.floating,
           ),
         );
@@ -297,6 +302,9 @@ class _tabsBarPageState extends State<tabsBarPage>
                   // Audio Player Progress Bar
                   Consumer<AudioProvider>(
                     builder: (context, audioProvider, child) {
+                      if (audioProvider.audioUnavailable) {
+                        return const SizedBox.shrink();
+                      }
                       return StreamBuilder<Duration?>(
                         stream: audioProvider.player.positionStream,
                         builder: (context, snapshot) {
@@ -446,6 +454,24 @@ class _tabsBarPageState extends State<tabsBarPage>
                             // Audio Toggle/Controls
                             Consumer<AudioProvider>(
                               builder: (context, audioProvider, child) {
+                                if (audioProvider.audioUnavailable) {
+                                  return Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: const [
+                                      Icon(Icons.music_off_rounded,
+                                          color: white, size: 22),
+                                      SizedBox(width: 6),
+                                      Text(
+                                        'No audio added',
+                                        style: TextStyle(
+                                          color: white,
+                                          fontSize: 13,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                    ],
+                                  );
+                                }
                                 return Row(
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
@@ -798,9 +824,10 @@ class _BottomModalSheetState extends State<BottomModalSheet> {
                 Slider(
                   activeColor: Colors.amber,
                   inactiveColor: Colors.amber.withOpacity(0.3),
-                  value: fontSize.fontSize,
-                  min: 15,
-                  max: 40,
+                  value: fontSize.fontSize.clamp(
+                      FontSize.minFontSize, FontSize.maxFontSize),
+                  min: FontSize.minFontSize,
+                  max: FontSize.maxFontSize,
                   onChanged: (newValue) {
                     fontSize.fontSize = newValue;
                     widget.onChanged(newValue);
@@ -840,27 +867,30 @@ class IconWithText extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Stack(
-            alignment: Alignment.center,
-            children: [
-              SvgPicture.asset(
-                img,
-                height: 42, // Balanced icon size
-                color: isDarkTheme ? white : blk,
-              ),
-              Transform.translate(
-                offset: const Offset(0, -5), // Nudge up significantly to center
-                child: Text(
+          SizedBox(
+            height: 42,
+            width: 42,
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                SvgPicture.asset(
+                  img,
+                  height: 42, // Balanced icon size
+                  color: isDarkTheme ? white : mainColor,
+                ),
+                Text(
                   no,
+                  textAlign: TextAlign.center,
                   style: const TextStyle(
                     fontFamily: 'Uthmanic',
                     fontSize: 26, // Large, readable font size
                     fontWeight: FontWeight.bold,
                     color: Colors.amber,
+                    height: 1.0, // Tight line box so the digit centers cleanly
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
           const SizedBox(width: 8),
           Text(

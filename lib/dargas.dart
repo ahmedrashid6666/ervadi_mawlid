@@ -1,5 +1,6 @@
 import 'package:ervadi/module/assets.dart';
 import 'package:flutter/material.dart';
+import 'module/open_url.dart';
 
 class Darga {
   final String name;
@@ -8,7 +9,10 @@ class Darga {
   final int graves;
   final String details;
   final List<String> graveNames;
-  final String imageAsset;
+  final List<String> images; // Gallery of local asset photos (swipeable)
+  final String? imageAsset; // Legacy single asset (optional fallback)
+  final String? imageUrl; // Legacy network image (optional fallback)
+  final String? mapUrl;
 
   Darga({
     required this.name,
@@ -17,7 +21,10 @@ class Darga {
     required this.graves,
     required this.details,
     required this.graveNames,
-    required this.imageAsset,
+    this.images = const [],
+    this.imageAsset,
+    this.imageUrl,
+    this.mapUrl,
   });
 }
 
@@ -50,7 +57,15 @@ class NearestDargas extends StatelessWidget {
         'Sayyed Zainul Aabideen (R)',
         'Sayyed Nalla Ibrahim (R)',
       ],
-      imageAsset: 'assets/images/ervadi_main.jpg',
+      images: const [
+        'assets/images/dargas/maindarga_1.jpg',
+        'assets/images/dargas/maindarga_2.jpg',
+        'assets/images/dargas/maindarga_3.jpg',
+        'assets/images/dargas/maindarga_4.jpg',
+        'assets/images/dargas/maindarga_5.jpg',
+      ],
+      mapUrl:
+          'https://maps.google.com/maps/search/Ervadi%20durgah/@9.20902768,78.71007701,17z?hl=en',
     ),
     Darga(
       name: 'KATTU PALLI DARGA',
@@ -80,7 +95,17 @@ class NearestDargas extends StatelessWidget {
         'Hamsathul Basheer (R)',
         'Sulaikha (R)',
       ],
-      imageAsset: 'assets/images/another_darga.jpg',
+      images: const [
+        'assets/images/dargas/katupalli_1.jpg',
+        'assets/images/dargas/katupalli_2.jpg',
+        'assets/images/dargas/katupalli_3.jpg',
+        'assets/images/dargas/katupalli_4.jpg',
+        'assets/images/dargas/katupalli_5.jpg',
+        'assets/images/dargas/katupalli_6.jpg',
+        'assets/images/dargas/katupalli_7.jpg',
+      ],
+      mapUrl:
+          'https://maps.google.com/maps/search/Ameer%20Abbas%20Manthiri%20dargah/@9.21275129,78.71415699,17z?hl=en',
     ),
     Darga(
       name: 'SARA BEEVI DARGA',
@@ -98,7 +123,14 @@ class NearestDargas extends StatelessWidget {
         'Sayyed Faqir (R)',
         'Sayyed Qasim (R)',
       ],
-      imageAsset: 'assets/images/another_darga.jpg',
+      images: const [
+        'assets/images/dargas/sarabi_1.jpg',
+        'assets/images/dargas/sarabi_2.jpg',
+        'assets/images/dargas/sarabi_3.jpg',
+        'assets/images/dargas/sarabi_4.jpg',
+      ],
+      mapUrl:
+          'https://maps.google.com/maps/search/Sara%20Amma%20Safura%20Amma%20Palli%20Ervadi/@9.20902768,78.71007701,17z?hl=en',
     ),
     Darga(
       name: 'KANJIPPALLI DARGA',
@@ -114,7 +146,13 @@ class NearestDargas extends StatelessWidget {
         'Sayyed Vakeel Saheb (R)',
         'Meeran Sahib (R)',
       ],
-      imageAsset: 'assets/images/another_darga.jpg',
+      images: const [
+        'assets/images/dargas/kanhipalli_1.jpg',
+        'assets/images/dargas/kanhipalli_2.jpg',
+        'assets/images/dargas/kanhipalli_3.jpg',
+      ],
+      mapUrl:
+          'https://maps.google.com/maps/search/Kanjipalli%20Dharga/@9.20981879,78.72044807,17z?hl=en',
     ),
     Darga(
       name: 'KODIMARAM',
@@ -123,7 +161,13 @@ class NearestDargas extends StatelessWidget {
       graves: 0,
       details: 'from ERVADI',
       graveNames: [],
-      imageAsset: 'assets/images/another_darga.jpg',
+      images: const [
+        'assets/images/dargas/kodimaram_1.jpg',
+      ],
+      imageUrl:
+          'https://upload.wikimedia.org/wikipedia/commons/3/32/Erwadi_kodi.jpg',
+      mapUrl:
+          'https://maps.google.com/maps/search/Ervadi%20kodimaram/@9.1910144,78.71693461,17z?hl=en',
     ),
     Darga(
       name: 'ARAKKAS UMMA DARGA',
@@ -136,7 +180,17 @@ class NearestDargas extends StatelessWidget {
         'Muhammed Ansari (R)',
         'Abdul Qadir Nadha Valiyullah (R)',
       ],
-      imageAsset: 'assets/images/another_darga.jpg',
+      images: const [
+        'assets/images/dargas/arakas_1.jpg',
+        'assets/images/dargas/arakas_2.jpg',
+        'assets/images/dargas/arakas_3.jpg',
+        'assets/images/dargas/arakas_4.jpg',
+        'assets/images/dargas/arakas_5.jpg',
+        'assets/images/dargas/arakas_6.jpg',
+        'assets/images/dargas/arakas_7.jpg',
+      ],
+      mapUrl:
+          'https://maps.google.com/maps/search/Arakkas%20Umma%20Beevi/@9.21870054,78.72400134,17z?hl=en',
     ),
     Darga(
       name: 'MAYA-KULAM DARGA',
@@ -148,7 +202,13 @@ class NearestDargas extends StatelessWidget {
         'Periya Nainar Uppa (R)',
         'Mariyam Umma (R)',
       ],
-      imageAsset: 'assets/images/another_darga.jpg',
+      images: const [
+        'assets/images/dargas/mayakulam_1.jpg',
+        'assets/images/dargas/mayakulam_2.jpg',
+        'assets/images/dargas/mayakulam_3.jpg',
+      ],
+      mapUrl:
+          'https://maps.google.com/maps/search/Mayakulam%20dharga%20Chevakilamai%20Dharga/@9.22768354,78.75342711,17z?hl=en',
     ),
     Darga(
       name: 'SADAQATHULLAH QAHIRI DARGA',
@@ -159,7 +219,13 @@ class NearestDargas extends StatelessWidget {
       graveNames: [
         '1 Qutub Sadaqallah-al-Qahiri (R)',
       ],
-      imageAsset: 'assets/images/another_darga.jpg',
+      images: const [
+        'assets/images/dargas/kilakara_1.jpg',
+        'assets/images/dargas/kilakara_2.jpg',
+        'assets/images/dargas/kilakara_3.jpg',
+      ],
+      mapUrl:
+          'https://maps.google.com/maps/search/Keelakkarai%20Sadaqathullah%20Darga%20and%20Jinn%20Masjid/@9.23122954,78.78447091,17z?hl=en',
     ),
     Darga(
       name: 'VALINOKKAM DARGA',
@@ -176,7 +242,17 @@ class NearestDargas extends StatelessWidget {
         'Abbas (R)',
         'Abdullah (R)',
       ],
-      imageAsset: 'assets/images/another_darga.jpg',
+      images: const [
+        'assets/images/dargas/valinokam_1.jpg',
+        'assets/images/dargas/valinokam_2.jpg',
+        'assets/images/dargas/valinokam_3.jpg',
+        'assets/images/dargas/valinokam_4.jpg',
+        'assets/images/dargas/valinokam_5.jpg',
+        'assets/images/dargas/valinokam_6.jpg',
+        'assets/images/dargas/valinokam_7.jpg',
+      ],
+      mapUrl:
+          'https://maps.google.com/maps/search/Valinokkam%20Dargah/@9.167,78.650,15z?hl=en',
     )
   ];
 
@@ -223,7 +299,7 @@ class NearestDargas extends StatelessWidget {
             return Container(
               margin: EdgeInsets.only(bottom: screenWidth * 0.04),
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(25),
+                borderRadius: BorderRadius.circular(16),
                 boxShadow: [
                   BoxShadow(
                     color: isDark
@@ -237,7 +313,7 @@ class NearestDargas extends StatelessWidget {
               child: Card(
                 margin: EdgeInsets.zero,
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(25),
+                  borderRadius: BorderRadius.circular(16),
                 ),
                 color: isDark ? theme.primaryColor : white,
                 elevation: 0,
@@ -422,6 +498,43 @@ class NearestDargas extends StatelessWidget {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
+                            // Open location in Google Maps
+                            if (darga.mapUrl != null) ...[
+                              SizedBox(
+                                width: double.infinity,
+                                child: ElevatedButton.icon(
+                                  onPressed: () => launch(darga.mapUrl!),
+                                  icon: Icon(
+                                    Icons.map_rounded,
+                                    size: screenWidth * 0.05,
+                                    color: white,
+                                  ),
+                                  label: Text(
+                                    'View on Map',
+                                    style: (theme.textTheme.titleSmall ??
+                                            TextStyle())
+                                        .copyWith(
+                                      color: white,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: screenWidth * 0.035,
+                                    ),
+                                  ),
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: isDark
+                                        ? amber.withOpacity(0.85)
+                                        : theme.colorScheme.primary,
+                                    padding: EdgeInsets.symmetric(
+                                      vertical: screenWidth * 0.03,
+                                    ),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                    elevation: 2,
+                                  ),
+                                ),
+                              ),
+                              SizedBox(height: screenWidth * 0.04),
+                            ],
                             // Enhanced graves list
                             ...List.generate(darga.graveNames.length, (i) {
                               final name = darga.graveNames[i];
@@ -556,114 +669,8 @@ class NearestDargas extends StatelessWidget {
                               );
                             }),
                             SizedBox(height: screenWidth * 0.05),
-                            // Enhanced image section
-                            Container(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(16),
-                                border: Border.all(
-                                  color: isDark
-                                      ? amber.withOpacity(0.3)
-                                      : theme.colorScheme.primary
-                                          .withOpacity(0.3),
-                                  width: 2,
-                                ),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: isDark
-                                        ? Colors.black.withOpacity(0.3)
-                                        : Colors.grey.withOpacity(0.2),
-                                    blurRadius: 8,
-                                    offset: const Offset(0, 4),
-                                  ),
-                                ],
-                              ),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Container(
-                                    padding: EdgeInsets.all(screenWidth * 0.04),
-                                    decoration: BoxDecoration(
-                                      color: isDark
-                                          ? theme.primaryColor.withOpacity(0.8)
-                                          : theme.colorScheme.primary
-                                              .withOpacity(0.1),
-                                      borderRadius: const BorderRadius.only(
-                                        topLeft: Radius.circular(14),
-                                        topRight: Radius.circular(14),
-                                      ),
-                                    ),
-                                    child: Row(
-                                      children: [
-                                        Icon(
-                                          Icons.photo_camera_rounded,
-                                          color: isDark
-                                              ? amber
-                                              : theme.colorScheme.primary,
-                                          size: screenWidth * 0.05,
-                                        ),
-                                        SizedBox(width: screenWidth * 0.02),
-                                        Expanded(
-                                          child: Text(
-                                            '${darga.name} (${darga.distance})',
-                                            style: (theme.textTheme.titleSmall ?? TextStyle())
-                                                .copyWith(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: screenWidth * 0.035,
-                                              color: isDark
-                                                  ? white
-                                                  : theme.colorScheme.primary,
-                                            ),
-                                            overflow: TextOverflow.ellipsis,
-                                            maxLines: 2,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  ClipRRect(
-                                    borderRadius: const BorderRadius.only(
-                                      bottomLeft: Radius.circular(14),
-                                      bottomRight: Radius.circular(14),
-                                    ),
-                                    child: Image.asset(
-                                      darga.imageAsset,
-                                      fit: BoxFit.cover,
-                                      width: double.infinity,
-                                      height: screenWidth * 0.5,
-                                      errorBuilder:
-                                          (context, error, stackTrace) {
-                                        return Container(
-                                          height: screenWidth * 0.5,
-                                          color: isDark
-                                              ? theme.primaryColor
-                                                  .withOpacity(0.5)
-                                              : Colors.grey.shade200,
-                                          child: Center(
-                                            child: Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              children: [
-                                                Icon(
-                                                  Icons
-                                                      .image_not_supported_rounded,
-                                                  size: screenWidth * 0.12,
-                                                  color: isDark
-                                                      ? amber
-                                                      : theme
-                                                          .colorScheme.primary,
-                                                ),
-                                                SizedBox(
-                                                    height: screenWidth * 0.02),
-                                              ],
-                                            ),
-                                          ),
-                                        );
-                                      },
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
+                            // Photo gallery (swipeable) — real photos bundled from the app
+                            _DargaGallery(darga: darga),
                           ],
                         ),
                       ),
@@ -673,6 +680,264 @@ class NearestDargas extends StatelessWidget {
               ),
             );
           },
+        ),
+      ),
+    );
+  }
+}
+
+/// Swipeable photo gallery for a single darga.
+/// Shows all bundled photos in a horizontal PageView with page-dot indicators
+/// and a "current / total" counter badge. Falls back gracefully to the legacy
+/// [Darga.imageUrl] / [Darga.imageAsset] fields, and finally to a placeholder.
+class _DargaGallery extends StatefulWidget {
+  final Darga darga;
+  const _DargaGallery({Key? key, required this.darga}) : super(key: key);
+
+  @override
+  State<_DargaGallery> createState() => _DargaGalleryState();
+}
+
+class _DargaGalleryState extends State<_DargaGallery> {
+  final PageController _controller = PageController();
+  int _current = 0;
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  // Resolve which list of images to show (new gallery first, then legacy fields).
+  List<String> get _images {
+    if (widget.darga.images.isNotEmpty) return widget.darga.images;
+    if (widget.darga.imageUrl != null) return [widget.darga.imageUrl!];
+    if (widget.darga.imageAsset != null) return [widget.darga.imageAsset!];
+    return const [];
+  }
+
+  bool _isNetwork(String path) => path.startsWith('http');
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+    final screenWidth = MediaQuery.of(context).size.width;
+    final darga = widget.darga;
+    final images = _images;
+    final imgHeight = screenWidth * 0.6;
+
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: isDark
+              ? amber.withOpacity(0.3)
+              : theme.colorScheme.primary.withOpacity(0.3),
+          width: 2,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: isDark
+                ? Colors.black.withOpacity(0.3)
+                : Colors.grey.withOpacity(0.2),
+            blurRadius: 8,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Header with camera icon, name/distance, and a photo counter.
+          Container(
+            padding: EdgeInsets.all(screenWidth * 0.04),
+            decoration: BoxDecoration(
+              color: isDark
+                  ? theme.primaryColor.withOpacity(0.8)
+                  : theme.colorScheme.primary.withOpacity(0.1),
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(14),
+                topRight: Radius.circular(14),
+              ),
+            ),
+            child: Row(
+              children: [
+                Icon(
+                  Icons.photo_camera_rounded,
+                  color: isDark ? amber : theme.colorScheme.primary,
+                  size: screenWidth * 0.05,
+                ),
+                SizedBox(width: screenWidth * 0.02),
+                Expanded(
+                  child: Text(
+                    '${darga.name} (${darga.distance})',
+                    style: (theme.textTheme.titleSmall ?? const TextStyle())
+                        .copyWith(
+                      fontWeight: FontWeight.bold,
+                      fontSize: screenWidth * 0.035,
+                      color: isDark ? white : theme.colorScheme.primary,
+                    ),
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 2,
+                  ),
+                ),
+                if (images.length > 1)
+                  Container(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: screenWidth * 0.025,
+                      vertical: screenWidth * 0.008,
+                    ),
+                    decoration: BoxDecoration(
+                      color: isDark
+                          ? amber.withOpacity(0.9)
+                          : theme.colorScheme.primary,
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(
+                          Icons.collections_rounded,
+                          size: screenWidth * 0.035,
+                          color: isDark ? blk : white,
+                        ),
+                        SizedBox(width: screenWidth * 0.01),
+                        Text(
+                          '${_current + 1}/${images.length}',
+                          style: TextStyle(
+                            color: isDark ? blk : white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: screenWidth * 0.03,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+              ],
+            ),
+          ),
+          // Swipeable image carousel.
+          ClipRRect(
+            borderRadius: const BorderRadius.only(
+              bottomLeft: Radius.circular(14),
+              bottomRight: Radius.circular(14),
+            ),
+            child: images.isEmpty
+                ? _placeholder(context, isDark, imgHeight)
+                : Stack(
+                    alignment: Alignment.bottomCenter,
+                    children: [
+                      SizedBox(
+                        height: imgHeight,
+                        width: double.infinity,
+                        child: PageView.builder(
+                          controller: _controller,
+                          itemCount: images.length,
+                          onPageChanged: (i) => setState(() => _current = i),
+                          itemBuilder: (context, i) {
+                            final path = images[i];
+                            if (_isNetwork(path)) {
+                              return Image.network(
+                                path,
+                                fit: BoxFit.cover,
+                                width: double.infinity,
+                                height: imgHeight,
+                                loadingBuilder: (context, child, progress) {
+                                  if (progress == null) return child;
+                                  return Container(
+                                    height: imgHeight,
+                                    color: isDark
+                                        ? theme.primaryColor.withOpacity(0.5)
+                                        : Colors.grey.shade200,
+                                    child: Center(
+                                      child: CircularProgressIndicator(
+                                        strokeWidth: 2.5,
+                                        color: isDark
+                                            ? amber
+                                            : theme.colorScheme.primary,
+                                        value: progress.expectedTotalBytes !=
+                                                null
+                                            ? progress.cumulativeBytesLoaded /
+                                                progress.expectedTotalBytes!
+                                            : null,
+                                      ),
+                                    ),
+                                  );
+                                },
+                                errorBuilder: (context, error, stackTrace) =>
+                                    _placeholder(context, isDark, imgHeight),
+                              );
+                            }
+                            return Image.asset(
+                              path,
+                              fit: BoxFit.cover,
+                              width: double.infinity,
+                              height: imgHeight,
+                              errorBuilder: (context, error, stackTrace) =>
+                                  _placeholder(context, isDark, imgHeight),
+                            );
+                          },
+                        ),
+                      ),
+                      // Page-dot indicators over a soft gradient scrim.
+                      if (images.length > 1)
+                        Container(
+                          width: double.infinity,
+                          padding: EdgeInsets.symmetric(
+                            vertical: screenWidth * 0.025,
+                          ),
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              begin: Alignment.bottomCenter,
+                              end: Alignment.topCenter,
+                              colors: [
+                                Colors.black.withOpacity(0.45),
+                                Colors.transparent,
+                              ],
+                            ),
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: List.generate(images.length, (i) {
+                              final active = i == _current;
+                              return AnimatedContainer(
+                                duration: const Duration(milliseconds: 250),
+                                margin:
+                                    const EdgeInsets.symmetric(horizontal: 3),
+                                width: active ? 18 : 7,
+                                height: 7,
+                                decoration: BoxDecoration(
+                                  color: active
+                                      ? (isDark ? amber : white)
+                                      : white.withOpacity(0.55),
+                                  borderRadius: BorderRadius.circular(4),
+                                ),
+                              );
+                            }),
+                          ),
+                        ),
+                    ],
+                  ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // Fallback shown when an image is missing or fails to load.
+  Widget _placeholder(BuildContext context, bool isDark, double height) {
+    final theme = Theme.of(context);
+    final screenWidth = MediaQuery.of(context).size.width;
+    return Container(
+      height: height,
+      width: double.infinity,
+      color: isDark ? theme.primaryColor.withOpacity(0.5) : Colors.grey.shade200,
+      child: Center(
+        child: Icon(
+          Icons.image_not_supported_rounded,
+          size: screenWidth * 0.12,
+          color: isDark ? amber : theme.colorScheme.primary,
         ),
       ),
     );

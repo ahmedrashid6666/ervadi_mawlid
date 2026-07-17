@@ -33,11 +33,20 @@ def keystoreProperties = new Properties()
 android {
     namespace 'in.mawlid.ervadi'
     compileSdkVersion flutter.compileSdkVersion
-    ndkVersion flutter.ndkVersion
+    // NDK r27 produces 16 KB-aligned native libraries (Play 16 KB page-size requirement).
+    ndkVersion "27.0.12077973"
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    // Keep native libraries uncompressed and page-aligned in the bundle so the
+    // 16 KB alignment survives packaging (AGP 8.5.1+).
+    packaging {
+        jniLibs {
+            useLegacyPackaging = false
+        }
     }
 
     kotlinOptions {

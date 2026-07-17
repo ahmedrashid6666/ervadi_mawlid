@@ -17,13 +17,6 @@ class _ErvadiShaheeedFamilyTreeState extends State<ErvadiShaheeedFamilyTree>
   // Family lineage data with corrected Malayalam
   final List<Map<String, dynamic>> familyLineage = [
     {
-      'name': 'سيدنا محمد المصطفى',
-      'title': 'صلى الله عليه وسلم',
-      'malayalam': 'മുത്ത് നബി മുഹമ്മദ് (സ)',
-      'isSpecial': true,
-      'generation': 1,
-    },
-    {
       'name': 'سيدتنا فاطمة',
       'title': 'رضي الله عنها',
       'malayalam': 'സയ്യിദത്ത് ഫാത്തിമ (റ)',
@@ -302,7 +295,7 @@ class _ErvadiShaheeedFamilyTreeState extends State<ErvadiShaheeedFamilyTree>
                             ),
                             child: Center(
                               child: Text(
-                                '${person['generation']}',
+                                '${index + 1}',
                                 style: TextStyle(
                                   color: Colors.white,
                                   fontWeight: FontWeight.bold,
@@ -478,7 +471,7 @@ class _ErvadiShaheeedFamilyTreeState extends State<ErvadiShaheeedFamilyTree>
                           ),
                         ),
                         child: Text(
-                          'This represents 18 generations of blessed souls who carried forward the light of Islam and spiritual guidance.',
+                          'This represents 17 generations of blessed souls who carried forward the light of Islam and spiritual guidance.',
                           style: TextStyle(
                             color: Colors.amber.shade800,
                             fontSize: 13,

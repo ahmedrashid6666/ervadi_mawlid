@@ -50,6 +50,8 @@ class AboutPage extends StatelessWidget {
                   //   ),
                   // ),
                   SizedBox(height: 20.0),
+                  _profileSection(context, isDarkTheme),
+                  SizedBox(height: 28.0),
                   Text(
                     '''ഏര്‍വാടി ശുഹദാക്കള്‍
 
@@ -69,6 +71,153 @@ class AboutPage extends StatelessWidget {
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  // Biographical profile of Qutub Sultan Sayyed Ibrahim Badusha Shaheed (R).
+  Widget _profileSection(BuildContext context, bool isDarkTheme) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+      decoration: BoxDecoration(
+        color: white.withOpacity(0.06),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: amber.withOpacity(0.30), width: 1),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          // Arabic title couplet
+          Text(
+            'أَنَا السُّلْطَانُ إِبْرَاهِيمُ اسْمِي\nإِلَى خَيْرِ الْبَرِيَّةِ انْتِمَائِي',
+            textAlign: TextAlign.center,
+            textDirection: TextDirection.rtl,
+            style: const TextStyle(
+              fontFamily: 'Amiri',
+              fontWeight: FontWeight.bold,
+              fontSize: 22,
+              height: 1.6,
+              color: amber,
+            ),
+          ),
+          const SizedBox(height: 14),
+          // Full name / heading
+          Text(
+            'ഖുത്ബുസ്സുൽത്താൻ സയ്യിദ് ഇബ്രാഹീം ബാദ്ഷാ ശഹീദ് ബ്‌റുവാദി رضي الله عنه',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              height: 1.5,
+              color: isDarkTheme ? white : white,
+            ),
+          ),
+          const SizedBox(height: 12),
+          // Urus badge
+          Center(
+            child: Container(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+              decoration: BoxDecoration(
+                color: amber.withOpacity(0.90),
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: const Text(
+                'അറൂസ് മുബാറക് 851  •  عروس مبارك ٨٥١',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: blk,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 14,
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(height: 20),
+          Divider(color: amber.withOpacity(0.25), thickness: 1),
+          const SizedBox(height: 8),
+          // Detail rows
+          _detailRow(context, 'ജനനം', '541 ഹിജ്‌റ'),
+          _detailRow(context, 'പിതാവ്', 'സയ്യിദ് അഹ്മദ് (റ)'),
+          _detailRow(context, 'മാതാവ്', 'സയ്യിദത്ത് ഫാത്തിമ (റ)'),
+          _detailRow(context, 'ഭാര്യ', 'സയ്യിദത്ത് അലി ഫാത്തിമ (റ)'),
+          _detailRow(
+            context,
+            'സന്താനങ്ങൾ',
+            'ഖുതുബ് സയ്യിദ് അബൂ താഹിർ ശഹീദ് (റ)\nസൈനുൽ ആബിദീൻ (റ)',
+          ),
+          _detailRow(context, 'സഹോദരി', 'സയ്യിദത്ത് റാബിഅ (റ)'),
+          _detailRow(context, 'സ്വദേശം', 'ഉർവ, മദീന'),
+          _detailRow(
+            context,
+            'പരമ്പര',
+            'മുത്ത് നബി ﷺ തങ്ങളുടെ 17-ാം പേരമകൻ',
+          ),
+          _detailRow(
+            context,
+            'ഇന്ത്യയിൽ ആദ്യം വന്ന സ്ഥലം',
+            'സിസ് (ഗുജറാത്ത്)',
+          ),
+          _detailRow(
+            context,
+            'മഖാം',
+            'ഏർവാടി (ഭൂത്രമാണിക്ക പട്ടണം), രാമനാഥപുരം ജില്ല, തമിഴ്‌നാട്',
+          ),
+          _detailRow(context, 'കൊടി മരം വന്ന രാജ്യം', 'ഭർമ (ബർമ)'),
+          _detailRow(
+            context,
+            'ചരിത്ര കൃതി',
+            'ശഹാദത്തേ നാമാ (ഫാരിസി)\nരചയിതാവ്: അബ്ബാസ് (തുർക്കി)',
+          ),
+          _detailRow(
+            context,
+            'വഫാത്ത്',
+            '23 ദുൽ ഖഅ്ദ ഹിജ്‌റ 596 (തിങ്കൾ ശഹീദായ ദിനം)',
+          ),
+        ],
+      ),
+    );
+  }
+
+  // A single "label : value" row in the profile section.
+  Widget _detailRow(BuildContext context, String label, String value) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 7),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(
+            width: 150,
+            child: Text(
+              label,
+              style: const TextStyle(
+                fontSize: 15,
+                fontWeight: FontWeight.bold,
+                height: 1.4,
+                color: amber,
+              ),
+            ),
+          ),
+          const Text(
+            ':  ',
+            style: TextStyle(
+              fontSize: 15,
+              fontWeight: FontWeight.bold,
+              color: amber,
+            ),
+          ),
+          Expanded(
+            child: Text(
+              value,
+              style: const TextStyle(
+                fontSize: 16,
+                height: 1.45,
+                color: white,
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

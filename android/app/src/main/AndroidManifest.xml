@@ -1,5 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="in.mawlid.ervadi">
+   <uses-permission android:name="android.permission.INTERNET"/>
    <application
         android:label="Ervadi Mawlid مولد شهداء يرود"
         android:name="${applicationName}"

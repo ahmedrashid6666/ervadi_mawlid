@@ -4,9 +4,17 @@ import 'package:just_audio/just_audio.dart';
 class AudioProvider with ChangeNotifier {
   final AudioPlayer _audioPlayer = AudioPlayer();
   bool _isPlayerReady = false;
+  bool _audioUnavailable = false;
 
   AudioPlayer get player => _audioPlayer;
   bool get isPlayerReady => _isPlayerReady;
+
+  // True when the current baith has no audio (out of range or failed to load).
+  bool get audioUnavailable => _audioUnavailable;
+
+  // Whether an audio file is mapped for the given tab index.
+  bool hasAudioFile(int tabIndex) =>
+      tabIndex >= 0 && tabIndex < _audioFiles.length;
 
   // Audio URL base
   static const String audioBaseUrl =
@@ -32,7 +40,14 @@ class AudioProvider with ChangeNotifier {
   AudioProvider();
 
   Future<void> loadAudio(int tabIndex) async {
-    if (tabIndex < 0 || tabIndex >= _audioFiles.length) return;
+    // No audio file mapped for this baith.
+    if (!hasAudioFile(tabIndex)) {
+      _isPlayerReady = false;
+      _audioUnavailable = true;
+      _currentTabIndex = tabIndex;
+      notifyListeners();
+      return;
+    }
     if (_currentTabIndex == tabIndex && _isPlayerReady) return;
 
     // Save current position before switching
@@ -41,6 +56,7 @@ class AudioProvider with ChangeNotifier {
     }
 
     _isPlayerReady = false;
+    _audioUnavailable = false;
     _currentTabIndex = tabIndex;
     notifyListeners();
 
@@ -54,10 +70,12 @@ class AudioProvider with ChangeNotifier {
       }
 
       _isPlayerReady = true;
+      _audioUnavailable = false;
       notifyListeners();
     } catch (e) {
       print("Error loading audio: $e");
       _isPlayerReady = false;
+      _audioUnavailable = true;
       notifyListeners();
       rethrow;
     }
