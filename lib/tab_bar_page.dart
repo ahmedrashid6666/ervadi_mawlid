@@ -878,15 +878,19 @@ class IconWithText extends StatelessWidget {
                   height: 42, // Balanced icon size
                   color: isDarkTheme ? white : mainColor,
                 ),
-                Text(
-                  no,
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    fontFamily: 'Uthmanic',
-                    fontSize: 26, // Large, readable font size
-                    fontWeight: FontWeight.bold,
-                    color: Colors.amber,
-                    height: 1.0, // Tight line box so the digit centers cleanly
+                Positioned.fill(
+                  child: Center(
+                    child: Text(
+                      no,
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(
+                        fontFamily: 'Uthmanic',
+                        fontSize: 22, // fits within the star circle
+                        fontWeight: FontWeight.bold,
+                        color: Colors.amber,
+                        height: 1.0, // tight box for true vertical centering
+                      ),
+                    ),
                   ),
                 ),
               ],

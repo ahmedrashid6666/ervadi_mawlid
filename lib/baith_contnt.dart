@@ -142,6 +142,19 @@ class _BaithContntState extends State<BaithContnt> {
     _autoScrollTimer = null;
   }
 
+  // Safe translation lookup: prevents RangeError when the selected
+  // language list is shorter than the baith text (some baiths have more
+  // lines than there are translations). Returns '' when out of range.
+  String _trans(int index) {
+    // Only the first baith (Muraadi) has translations; the rest have none,
+    // so we never show another baith's translation, and blanks are hidden.
+    if (widget.baithIndex != 0) return '';
+    final list = TranslationData.getTranslation(widget.selectedLanguage);
+    if (index < 0 || index >= list.length) return '';
+    final t = list[index];
+    return t.trim().isEmpty ? '' : t;
+  }
+
   @override
   Widget build(BuildContext context) {
     final fontSize = Provider.of<FontSize>(context);
@@ -221,14 +234,13 @@ class _BaithContntState extends State<BaithContnt> {
                                         widget.showTranslationNotifier,
                                     builder:
                                         (context, showTranslation, child) {
-                                      if (!showTranslation)
+                                      if (!showTranslation || _trans(index).isEmpty)
                                         return const SizedBox();
                                       return Padding(
                                         padding:
                                             const EdgeInsets.only(top: 8.0),
                                         child: Text(
-                                          TranslationData.getTranslation(
-                                              widget.selectedLanguage)[index],
+                                          _trans(index),
                                           style: const TextStyle(
                                             color: Colors.white70,
                                             fontSize: 16,
@@ -273,7 +285,7 @@ class _BaithContntState extends State<BaithContnt> {
                                         widget.showTranslationNotifier,
                                     builder:
                                         (context, showTranslation, child) {
-                                      if (!showTranslation)
+                                      if (!showTranslation || _trans(index).isEmpty)
                                         return const SizedBox();
                                       return Align(
                                         alignment: Alignment.centerLeft,
@@ -281,9 +293,7 @@ class _BaithContntState extends State<BaithContnt> {
                                           padding:
                                               const EdgeInsets.only(top: 8.0),
                                           child: Text(
-                                            TranslationData.getTranslation(
-                                                widget.selectedLanguage)[
-                                                index],
+                                            _trans(index),
                                             style: const TextStyle(
                                               color: Colors.white70,
                                               fontSize: 16,
@@ -351,15 +361,13 @@ class _BaithContntState extends State<BaithContnt> {
                                           widget.showTranslationNotifier,
                                       builder:
                                           (context, showTranslation, child) {
-                                        if (!showTranslation)
+                                        if (!showTranslation || _trans(index).isEmpty)
                                           return const SizedBox();
                                         return Padding(
                                           padding:
                                               const EdgeInsets.only(top: 8.0),
                                           child: Text(
-                                            TranslationData.getTranslation(
-                                                widget.selectedLanguage)[
-                                                index],
+                                            _trans(index),
                                             style: TextStyle(
                                               color: Theme.of(context)
                                                   .primaryColorDark, // <- unchanged
@@ -401,7 +409,7 @@ class _BaithContntState extends State<BaithContnt> {
                                           widget.showTranslationNotifier,
                                       builder:
                                           (context, showTranslation, child) {
-                                        if (!showTranslation)
+                                        if (!showTranslation || _trans(index).isEmpty)
                                           return const SizedBox();
                                         return Align(
                                           alignment: Alignment.centerLeft,
@@ -409,9 +417,7 @@ class _BaithContntState extends State<BaithContnt> {
                                             padding:
                                                 const EdgeInsets.only(top: 8.0),
                                             child: Text(
-                                              TranslationData.getTranslation(
-                                                  widget.selectedLanguage)[
-                                                  index],
+                                              _trans(index),
                                               style: TextStyle(
                                                 color: Theme.of(context)
                                                     .primaryColorDark, // <- unchanged

@@ -17,6 +17,14 @@ class _ErvadiShaheeedFamilyTreeState extends State<ErvadiShaheeedFamilyTree>
   // Family lineage data with corrected Malayalam
   final List<Map<String, dynamic>> familyLineage = [
     {
+      'name': 'سيدنا محمد ﷺ',
+      'title': 'صلى الله عليه وسلم',
+      'malayalam': 'മുഹമ്മദ് നബി ﷺ',
+      'isSpecial': true,
+      'isProphet': true,
+      'generation': 1,
+    },
+    {
       'name': 'سيدتنا فاطمة',
       'title': 'رضي الله عنها',
       'malayalam': 'സയ്യിദത്ത് ഫാത്തിമ (റ)',
@@ -294,14 +302,18 @@ class _ErvadiShaheeedFamilyTreeState extends State<ErvadiShaheeedFamilyTree>
                               ],
                             ),
                             child: Center(
-                              child: Text(
-                                '${index + 1}',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: person['isSpecial'] ? 18 : 16,
-                                ),
-                              ),
+                              child: person['isProphet'] == true
+                                  ? const Icon(Icons.star_rounded,
+                                      color: Colors.white, size: 26)
+                                  : Text(
+                                      '$index',
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize:
+                                            person['isSpecial'] ? 18 : 16,
+                                      ),
+                                    ),
                             ),
                           ),
 
@@ -427,6 +439,32 @@ class _ErvadiShaheeedFamilyTreeState extends State<ErvadiShaheeedFamilyTree>
           showDialog(
             context: context,
             builder: (BuildContext context) {
+              final bioRows = <List<String>>[
+                ['ജനനം', '541 ഹിജ്‌റ'],
+                ['പിതാവ്', 'സയ്യിദ് അഹ്മദ് (റ)'],
+                ['മാതാവ്', 'സയ്യിദത്ത് ഫാത്തിമ (റ)'],
+                ['ഭാര്യ', 'സയ്യിദത്ത് അലി ഫാത്തിമ (റ)'],
+                [
+                  'സന്താനങ്ങൾ',
+                  'ഖുതുബ് സയ്യിദ് അബൂ താഹിൽ ശഹീദ് (റ), സൈനുർ ആബിദീൻ (റ)'
+                ],
+                ['സഹോദരി', 'സയ്യിദത്ത് റാബിഅ (റ)'],
+                ['സ്വദേശം', 'ഉൽവ, മദീന'],
+                ['പരമ്പര', 'മുത്ത് നബി ﷺ തങ്ങളുടെ 17-ാം പേരമകൻ'],
+                ['ഇന്ത്യയിർ ആദ്യം വന്ന സ്ഥലം', 'സിസ് (ഗുജറാത്ത്)'],
+                [
+                  'മഖാം',
+                  'ഏൽവാടി (ഭൂത്രമാണിക്ക പട്ടണം), രാമനാഥപുരം ജില്ല, തമിഴ്‌നാട്'
+                ],
+                ['കൊടി മരം വന്ന രാജ്യം', 'ഭൽമ (ബൽമ)'],
+                [
+                  'ചരിത്ര കൃതി',
+                  'ശഹാദത്തേ നാമാ (ഫാരിസി), രചയിതാവ്: അബ്ബാസ് (തുൽക്കി)'
+                ],
+                ['വഫാത്ത്', '23 ദുർ ഖഅ്ദ ഹിജ്‌റ 596 (തിങ്കൾ ശഹീദായ ദിനം)'],
+              ];
+              final Color accent =
+                  isDark ? const Color(0xFF66BB6A) : const Color(0xFF0B6B34);
               return AlertDialog(
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(16),
@@ -435,7 +473,7 @@ class _ErvadiShaheeedFamilyTreeState extends State<ErvadiShaheeedFamilyTree>
                   children: [
                     Icon(
                       Icons.info_outline,
-                      color: Colors.amber.shade700,
+                      color: accent,
                       size: 28,
                     ),
                     const SizedBox(width: 8),
@@ -447,55 +485,131 @@ class _ErvadiShaheeedFamilyTreeState extends State<ErvadiShaheeedFamilyTree>
                     ),
                   ],
                 ),
-                content: SingleChildScrollView(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                        'This blessed lineage traces back from Qutb Sultan Syed Ibrahim Badshah (رضي الله عنه) of Ervadi to our beloved Prophet Muhammad (صلى الله عليه وسلم) through Sayyida Fatima (رضي الله عنها) and Imam Hussein (رضي الله عنه).',
-                        style: TextStyle(
-                          color: isDark ? Colors.white : Colors.black87,
-                          fontSize: 14,
-                          height: 1.4,
-                        ),
-                      ),
-                      const SizedBox(height: 12),
-                      Container(
-                        padding: const EdgeInsets.all(12),
-                        decoration: BoxDecoration(
-                          color: Colors.amber.shade50,
-                          borderRadius: BorderRadius.circular(8),
-                          border: Border.all(
-                            color: Colors.amber.shade200,
-                          ),
-                        ),
-                        child: Text(
-                          'This represents 17 generations of blessed souls who carried forward the light of Islam and spiritual guidance.',
+                content: SizedBox(
+                  width: double.maxFinite,
+                  child: SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        // Arabic title couplet
+                        Text(
+                          'أَنَا السُّلْطَانُ إِبْرَاهِيمُ اسْمِي\nإِلَى خَيْرِ الْبَرِيَّةِ انْتِمَائِي',
+                          textAlign: TextAlign.center,
+                          textDirection: TextDirection.rtl,
                           style: TextStyle(
-                            color: Colors.amber.shade800,
-                            fontSize: 13,
-                            fontWeight: FontWeight.w500,
-                            height: 1.3,
+                            fontFamily: 'Amiri',
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18,
+                            height: 1.6,
+                            color: accent,
                           ),
                         ),
-                      ),
-                    ],
+                        const SizedBox(height: 10),
+                        Text(
+                          'ഖുത്ബുസ്സുർത്താൻ സയ്യിദ് ഇബ്രാഹീം ബാദ്ഷാ ശഹീദ് (റ)',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.bold,
+                            height: 1.4,
+                            color: isDark ? Colors.white : Colors.black87,
+                          ),
+                        ),
+                        const SizedBox(height: 12),
+                        Text(
+                          'This blessed lineage traces back from Qutb Sultan Syed Ibrahim Badshah (رضي الله عنه) of Ervadi to our beloved Prophet Muhammad (صلى الله عليه وسلم) through Sayyida Fatima (رضي الله عنها) and Imam Hussein (رضي الله عنه).',
+                          style: TextStyle(
+                            color: isDark ? Colors.white : Colors.black87,
+                            fontSize: 13,
+                            height: 1.4,
+                          ),
+                        ),
+                        const SizedBox(height: 12),
+                        Divider(color: accent.withOpacity(0.3), thickness: 1),
+                        const SizedBox(height: 4),
+                        // Biography detail rows
+                        ...bioRows.map(
+                          (r) => Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 5),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                SizedBox(
+                                  width: 120,
+                                  child: Text(
+                                    r[0],
+                                    style: TextStyle(
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.bold,
+                                      height: 1.3,
+                                      color: accent,
+                                    ),
+                                  ),
+                                ),
+                                const Text(
+                                  ':  ',
+                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                ),
+                                Expanded(
+                                  child: Text(
+                                    r[1],
+                                    style: TextStyle(
+                                      fontSize: 13,
+                                      height: 1.35,
+                                      color:
+                                          isDark ? Colors.white : Colors.black87,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 12),
+                        Container(
+                          padding: const EdgeInsets.all(12),
+                          decoration: BoxDecoration(
+                            color: accent.withOpacity(0.10),
+                            borderRadius: BorderRadius.circular(8),
+                            border: Border.all(
+                              color: accent.withOpacity(0.3),
+                            ),
+                          ),
+                          child: Text(
+                            'This represents 17 generations of blessed souls who carried forward the light of Islam and spiritual guidance.',
+                            style: TextStyle(
+                              color: accent,
+                              fontSize: 13,
+                              fontWeight: FontWeight.w500,
+                              height: 1.3,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
                 actions: [
                   TextButton(
                     onPressed: () => Navigator.of(context).pop(),
                     style: TextButton.styleFrom(
-                      foregroundColor: Colors.amber.shade700,
+                      foregroundColor: Colors.white,
+                      backgroundColor: accent,
                       padding: const EdgeInsets.symmetric(
-                        horizontal: 20,
+                        horizontal: 24,
                         vertical: 10,
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
                       ),
                     ),
                     child: const Text(
                       'Close',
-                      style: TextStyle(fontWeight: FontWeight.w600),
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                   ),
                 ],
