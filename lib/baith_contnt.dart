@@ -120,20 +120,20 @@ class _BaithContntState extends State<BaithContnt> {
   void _startAutoScroll() {
     _autoScrollTimer?.cancel();
     if (_scrollSpeed <= 0) return;
-    // smaller duration for smoother movement; adjust if needed
-    _autoScrollTimer = Timer.periodic(const Duration(milliseconds: 50), (t) {
+    // ~60fps ticks with tiny jumpTo steps: smooth, and never fights a manual
+    // drag (jumpTo has no running animation to collide with the gesture).
+    _autoScrollTimer = Timer.periodic(const Duration(milliseconds: 16), (t) {
       if (!_scrollController.hasClients) return;
-      // Don't fight the user while they're dragging manually.
+      // Don't fight the user while they're dragging manually or flinging.
       if (_userInteracting) return;
       final max = _scrollController.position.maxScrollExtent;
       final current = _scrollController.offset;
-      final next = (current + _scrollSpeed).clamp(0.0, max);
-      // use animateTo for smoothness (catch exceptions when disposed)
-      _scrollController.animateTo(next,
-          duration: const Duration(milliseconds: 100), curve: Curves.linear);
-      if (next >= max) {
+      if (current >= max) {
         t.cancel();
+        return;
       }
+      final step = _scrollSpeed * 0.32; // pixels per frame; matches old speed
+      _scrollController.jumpTo((current + step).clamp(0.0, max));
     });
   }
 

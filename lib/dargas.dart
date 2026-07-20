@@ -701,6 +701,20 @@ class _DargaGallery extends StatefulWidget {
 class _DargaGalleryState extends State<_DargaGallery> {
   final PageController _controller = PageController();
   int _current = 0;
+  bool _precached = false;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (_precached) return;
+    _precached = true;
+    // Warm the image cache so the first frame and swipes render instantly.
+    for (final p in _images) {
+      if (!_isNetwork(p)) {
+        precacheImage(ResizeImage(AssetImage(p), width: 720), context);
+      }
+    }
+  }
 
   @override
   void dispose() {
@@ -874,6 +888,9 @@ class _DargaGalleryState extends State<_DargaGallery> {
                               fit: BoxFit.cover,
                               width: double.infinity,
                               height: imgHeight,
+                              cacheWidth: 720,
+                              gaplessPlayback: true,
+                              filterQuality: FilterQuality.low,
                               errorBuilder: (context, error, stackTrace) =>
                                   _placeholder(context, isDark, imgHeight),
                             );
