@@ -159,11 +159,14 @@ class _BaithContntState extends State<BaithContnt> {
   Widget build(BuildContext context) {
     final fontSize = Provider.of<FontSize>(context);
 
+    // Each card holds one couplet: the first hemistich sits to the right,
+    // the second to the left — one right/left pair = one box.
+    final int coupletCount = (widget.baithTxt.length / 2).ceil();
+
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.primary,
       body: Row(
         children: [
-          // Original ListView but using _scrollController
           Expanded(
             child: NotificationListener<ScrollNotification>(
               onNotification: _handleUserScroll,
@@ -171,270 +174,75 @@ class _BaithContntState extends State<BaithContnt> {
                 controller: _scrollController,
                 padding: const EdgeInsets.only(top: 6, bottom: 75),
                 physics: const BouncingScrollPhysics(),
-                itemCount: widget.baithTxt.length,
-                itemBuilder: (context, index) {
-                  int indexPlus = index + 1;
+                itemCount: coupletCount,
+                itemBuilder: (context, group) {
+                  final int i = group * 2;
+                  final bool highlight = group == 0; // opening refrain couplet
+                  final String lineA = widget.baithTxt[i];
+                  final String? lineB = (i + 1 < widget.baithTxt.length)
+                      ? widget.baithTxt[i + 1]
+                      : null;
 
-                  // First two lines are the green "header" couplet; the rest are
-                  // white content tiles. Both are now rounded cards with margin.
-                  if (index < 2) {
-                    return Container(
-                      margin: const EdgeInsets.symmetric(
-                          horizontal: 8, vertical: 5),
-                      clipBehavior: Clip.antiAlias,
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          colors: [
-                            Theme.of(context).colorScheme.primary,
-                            Theme.of(context).colorScheme.secondary,
-                          ],
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                        ),
-                        borderRadius: BorderRadius.circular(16),
-                        border: Border.all(
-                          color: white.withOpacity(0.15),
-                          width: 1,
-                        ),
-                      ),
-                      child: ListTile(
-                          title: Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 3, vertical: 8),
-                        child: indexPlus.isOdd
-                            ? Column(
-                                crossAxisAlignment: CrossAxisAlignment.end,
-                                children: [
-                                  Row(
-                                    textDirection: TextDirection.rtl,
-                                    children: [
-                                      Expanded(
-                                        child: Consumer<FontSize>(
-                                          builder:
-                                              (context, fontSize, child) {
-                                            return Text(
-                                              widget.baithTxt[index],
-                                              style: TextStyle(
-                                                fontFamily: 'Amiri',
-                                                fontWeight: FontWeight.bold,
-                                                color: white, // <- unchanged
-                                                fontSize: fontSize.fontSize,
-                                              ),
-                                              textDirection:
-                                                  TextDirection.rtl,
-                                            );
-                                          },
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  // Translation, only if toggled ON
-                                  ValueListenableBuilder<bool>(
-                                    valueListenable:
-                                        widget.showTranslationNotifier,
-                                    builder:
-                                        (context, showTranslation, child) {
-                                      if (!showTranslation || _trans(index).isEmpty)
-                                        return const SizedBox();
-                                      return Padding(
-                                        padding:
-                                            const EdgeInsets.only(top: 8.0),
-                                        child: Text(
-                                          _trans(index),
-                                          style: const TextStyle(
-                                            color: Colors.white70,
-                                            fontSize: 16,
-                                          ),
-                                          textDirection: TextDirection.ltr,
-                                        ),
-                                      );
-                                    },
-                                  ),
-                                ],
-                              )
-                            : Column(
-                                children: [
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceEvenly,
-                                    textDirection: TextDirection.ltr,
-                                    children: [
-                                      Expanded(
-                                        child: Consumer<FontSize>(
-                                          builder:
-                                              (context, fontSize, child) {
-                                            return Text(
-                                              widget.baithTxt[index],
-                                              style: TextStyle(
-                                                fontFamily: 'Amiri',
-                                                fontWeight: FontWeight.bold,
-                                                color: white, // <- unchanged
-                                                fontSize: fontSize.fontSize,
-                                              ),
-                                              textDirection:
-                                                  TextDirection.ltr,
-                                            );
-                                          },
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  // Translation, only if toggled ON
-                                  ValueListenableBuilder<bool>(
-                                    valueListenable:
-                                        widget.showTranslationNotifier,
-                                    builder:
-                                        (context, showTranslation, child) {
-                                      if (!showTranslation || _trans(index).isEmpty)
-                                        return const SizedBox();
-                                      return Align(
-                                        alignment: Alignment.centerLeft,
-                                        child: Padding(
-                                          padding:
-                                              const EdgeInsets.only(top: 8.0),
-                                          child: Text(
-                                            _trans(index),
-                                            style: const TextStyle(
-                                              color: Colors.white70,
-                                              fontSize: 16,
-                                            ),
-                                            textDirection: TextDirection.ltr,
-                                          ),
-                                        ),
-                                      );
-                                    },
-                                  ),
-                                ],
+                  final Color textColor = highlight
+                      ? white
+                      : Theme.of(context).primaryColorDark;
+
+                  return Container(
+                    margin: const EdgeInsets.symmetric(
+                        horizontal: 8, vertical: 5),
+                    clipBehavior: Clip.antiAlias,
+                    decoration: highlight
+                        ? BoxDecoration(
+                            gradient: LinearGradient(
+                              colors: [
+                                Theme.of(context).colorScheme.primary,
+                                Theme.of(context).colorScheme.secondary,
+                              ],
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                            ),
+                            borderRadius: BorderRadius.circular(16),
+                            border: Border.all(
+                              color: white.withOpacity(0.15),
+                              width: 1,
+                            ),
+                          )
+                        : BoxDecoration(
+                            color: Theme.of(context).colorScheme.background,
+                            borderRadius: BorderRadius.circular(16),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.06),
+                                blurRadius: 6,
+                                offset: const Offset(0, 2),
                               ),
-                      )),
-                    );
-                  } else {
-                    return Container(
-                      margin: const EdgeInsets.symmetric(
-                          horizontal: 8, vertical: 5),
-                      clipBehavior: Clip.antiAlias,
-                      decoration: BoxDecoration(
-                        color: Theme.of(context).colorScheme.background,
-                        borderRadius: BorderRadius.circular(16),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.06),
-                            blurRadius: 6,
-                            offset: const Offset(0, 2),
+                            ],
                           ),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 14, vertical: 14),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          _hemistich(lineA,
+                              alignEnd: true,
+                              color: textColor,
+                              fontSize: fontSize.fontSize),
+                          _translation(i,
+                              alignEnd: true, highlight: highlight),
+                          if (lineB != null) ...[
+                            const SizedBox(height: 10),
+                            _hemistich(lineB,
+                                alignEnd: false,
+                                color: textColor,
+                                fontSize: fontSize.fontSize),
+                            _translation(i + 1,
+                                alignEnd: false, highlight: highlight),
+                          ],
                         ],
                       ),
-                      child: ListTile(
-                        title: Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 3, vertical: 8),
-                          child: indexPlus.isOdd
-                              ? Column(
-                                  crossAxisAlignment: CrossAxisAlignment.end,
-                                  children: [
-                                    Row(
-                                        textDirection: TextDirection.rtl,
-                                        children: [
-                                          Expanded(
-                                              child: Consumer<FontSize>(
-                                            builder:
-                                                (context, provider, child) {
-                                              return Text(
-                                                widget.baithTxt[index],
-                                                style: TextStyle(
-                                                  fontFamily: 'Amiri',
-                                                  fontWeight: FontWeight.bold,
-                                                  color: Theme.of(context)
-                                                      .primaryColorDark, // <- unchanged
-                                                  fontSize: fontSize.fontSize,
-                                                ),
-                                                textDirection:
-                                                    TextDirection.rtl,
-                                              );
-                                            },
-                                          ))
-                                        ]),
-
-                                    // Translation, only if toggled ON
-                                    ValueListenableBuilder<bool>(
-                                      valueListenable:
-                                          widget.showTranslationNotifier,
-                                      builder:
-                                          (context, showTranslation, child) {
-                                        if (!showTranslation || _trans(index).isEmpty)
-                                          return const SizedBox();
-                                        return Padding(
-                                          padding:
-                                              const EdgeInsets.only(top: 8.0),
-                                          child: Text(
-                                            _trans(index),
-                                            style: TextStyle(
-                                              color: Theme.of(context)
-                                                  .primaryColorDark, // <- unchanged
-                                              fontSize: 16,
-                                            ),
-                                            textDirection: TextDirection.ltr,
-                                          ),
-                                        );
-                                      },
-                                    ),
-                                  ],
-                                )
-                              : Column(
-                                  children: [
-                                    Row(
-                                        textDirection: TextDirection.ltr,
-                                        children: [
-                                          Consumer<FontSize>(
-                                            builder:
-                                                (context, provider, child) {
-                                              return Text(
-                                                widget.baithTxt[index],
-                                                style: TextStyle(
-                                                  fontFamily: 'Amiri',
-                                                  fontWeight: FontWeight.bold,
-                                                  color: Theme.of(context)
-                                                      .primaryColorDark, // <- unchanged
-                                                  fontSize: fontSize.fontSize,
-                                                ),
-                                                textDirection:
-                                                    TextDirection.ltr,
-                                              );
-                                            },
-                                          ),
-                                        ]),
-                                    // Translation, only if toggled ON
-                                    ValueListenableBuilder<bool>(
-                                      valueListenable:
-                                          widget.showTranslationNotifier,
-                                      builder:
-                                          (context, showTranslation, child) {
-                                        if (!showTranslation || _trans(index).isEmpty)
-                                          return const SizedBox();
-                                        return Align(
-                                          alignment: Alignment.centerLeft,
-                                          child: Padding(
-                                            padding:
-                                                const EdgeInsets.only(top: 8.0),
-                                            child: Text(
-                                              _trans(index),
-                                              style: TextStyle(
-                                                color: Theme.of(context)
-                                                    .primaryColorDark, // <- unchanged
-                                                fontSize: 16,
-                                              ),
-                                              textDirection: TextDirection.ltr,
-                                            ),
-                                          ),
-                                        );
-                                      },
-                                    ),
-                                  ],
-                                ),
-                        ),
-                      ),
-                    );
-                  }
+                    ),
+                  );
                 },
               ),
             ),
@@ -480,6 +288,57 @@ class _BaithContntState extends State<BaithContnt> {
           ),
         ],
       ),
+    );
+  }
+
+  // One hemistich line, aligned right (first half) or left (second half).
+  Widget _hemistich(String text,
+      {required bool alignEnd,
+      required Color color,
+      required double fontSize}) {
+    return Align(
+      alignment: alignEnd ? Alignment.centerRight : Alignment.centerLeft,
+      child: Text(
+        text,
+        textAlign: alignEnd ? TextAlign.right : TextAlign.left,
+        textDirection: TextDirection.rtl,
+        style: TextStyle(
+          fontFamily: 'Amiri',
+          fontWeight: FontWeight.bold,
+          color: color,
+          fontSize: fontSize,
+        ),
+      ),
+    );
+  }
+
+  // Translation for a given line, shown only when the toggle is ON and a
+  // translation exists. White inside the green (highlighted) box.
+  Widget _translation(int index,
+      {required bool alignEnd, required bool highlight}) {
+    return ValueListenableBuilder<bool>(
+      valueListenable: widget.showTranslationNotifier,
+      builder: (context, showTranslation, child) {
+        final t = _trans(index);
+        if (!showTranslation || t.isEmpty) return const SizedBox();
+        return Align(
+          alignment: alignEnd ? Alignment.centerRight : Alignment.centerLeft,
+          child: Padding(
+            padding: const EdgeInsets.only(top: 6),
+            child: Text(
+              t,
+              textDirection: TextDirection.ltr,
+              textAlign: alignEnd ? TextAlign.right : TextAlign.left,
+              style: TextStyle(
+                color: highlight
+                    ? Colors.white70
+                    : Theme.of(context).primaryColorDark,
+                fontSize: 16,
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 }

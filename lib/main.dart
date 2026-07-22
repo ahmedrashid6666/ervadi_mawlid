@@ -8,7 +8,6 @@ import 'package:ervadi/module/theme.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'homepage.dart';
-import 'package:upgrader/upgrader.dart'; // ✅ Added
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -48,12 +47,9 @@ class _MyAppState extends State<MyApp> {
           ),
           title: 'Ervadi Mawlid',
           theme: themeProvider.getTheme(),
-          home: UpgradeAlert(
-            showIgnore: false,
-            showLater: false,
-            shouldPopScope: () => false, // ❗ Prevent closing without update
-            child: MainScreen(),
-          ),
+          // In-app updates are handled inside MainScreen via AppUpdater
+          // (Google Play in-app update flow — forced or skippable).
+          home: MainScreen(),
         );
       },
     );

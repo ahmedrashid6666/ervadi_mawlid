@@ -13,6 +13,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'about.dart';
+import 'module/app_updater.dart';
 import 'module/open_url.dart';
 import 'package:share_plus/share_plus.dart';
 
@@ -33,6 +34,16 @@ class MainScreen extends StatefulWidget {
 class _MainScreenState extends State<MainScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   final ValueNotifier<bool> showTranslationNotifier = ValueNotifier(true);
+
+  @override
+  void initState() {
+    super.initState();
+    // Check for a Google Play in-app update after the first frame.
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      AppUpdater.checkForUpdate(context);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);

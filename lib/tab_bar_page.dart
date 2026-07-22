@@ -8,6 +8,7 @@ import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'baith_contnt.dart';
+import 'baith_pdf.dart';
 import 'module/radio_btn.dart';
 import 'module/audio_provider.dart';
 import 'package:audio_video_progress_bar/audio_video_progress_bar.dart';
@@ -184,6 +185,61 @@ class _tabsBarPageState extends State<tabsBarPage>
   void dispose() {
     _tabController.dispose();
     super.dispose();
+  }
+
+  // Baith display titles, index-aligned with the tabs / TabBarView below.
+  static const List<String> _baithTitles = [
+    'مُرَادِي بَيت',
+    'أَيَا مَحْبُوب',
+    'يٰا وَلِي سَلَامْ عَلَيْكُم',
+    'أَيٰا سٰامِي لَدَى الْقٰادِرْ',
+    'عَبَّاسْ مَنْترِي بَيت',
+    'صَلٰوةٌ وَتَسْلِيمٌ',
+    'دُعــــآء',
+    'يَا أَكْرَمَ الْخَلْقِ',
+    'وَاهًا لِلْقُبَّةِ الْخَضْرَاءِ',
+  ];
+
+  List<String> _baithTextFor(int i) {
+    switch (i) {
+      case 0:
+        return first;
+      case 1:
+        return scnd;
+      case 2:
+        return thrd;
+      case 3:
+        return frth;
+      case 4:
+        return fifth;
+      case 5:
+        return sixth;
+      case 6:
+        return aameen;
+      case 7:
+        return yaAkrama;
+      case 8:
+        return kundoor;
+      default:
+        return first;
+    }
+  }
+
+  // Opens the "Share as PDF" sheet for the currently visible baith.
+  void _openPdfShare() {
+    final idx = _tabController.index;
+    // Only the first baith (Muraadi) currently has translations.
+    final translations = idx == 0
+        ? TranslationData.getTranslation(
+            selectedLanguage.isEmpty ? 'Malayalam' : selectedLanguage)
+        : const <String>[];
+    BaithPdf.showShareSheet(
+      context,
+      title: _baithTitles[idx],
+      lines: _baithTextFor(idx),
+      translations: translations,
+      index: idx,
+    );
   }
 
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
@@ -543,6 +599,19 @@ class _tabsBarPageState extends State<tabsBarPage>
                                   ],
                                 );
                               },
+                            ),
+                            const SizedBox(width: 8),
+                            // Share current baith as a designed PDF
+                            IconButton(
+                              padding: EdgeInsets.zero,
+                              constraints: const BoxConstraints(),
+                              iconSize: 26,
+                              icon: const Icon(
+                                Icons.picture_as_pdf_rounded,
+                                color: white,
+                                size: 26,
+                              ),
+                              onPressed: _openPdfShare,
                             ),
                             const SizedBox(width: 8),
                             IconButton(

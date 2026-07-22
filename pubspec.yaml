@@ -47,6 +47,9 @@ dependencies:
   upgrader: ^9.0.0
   just_audio: ^0.9.36
   audio_video_progress_bar: ^2.0.1
+  pdf: ^3.11.1
+  printing: ^5.13.3
+  in_app_update: ^4.2.3
 
 dev_dependencies:
   flutter_test:
