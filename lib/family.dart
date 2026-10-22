@@ -411,7 +411,7 @@ class _ErvadiShaheeedFamilyTreeState extends State<ErvadiShaheeedFamilyTree>
                                           color: isDark
                                               ? Colors.white
                                               : theme.primaryColor,
-                                          fontFamily: 'lpmq',
+                                          fontFamily: 'NotoMalayalam',
                                           height: 1.1,
                                         ),
                                         textAlign: TextAlign.left,

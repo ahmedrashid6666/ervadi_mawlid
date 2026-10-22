@@ -33,14 +33,14 @@ class ThemeProvider extends ChangeNotifier {
     ),
     textTheme: const TextTheme(
       titleMedium: TextStyle(
-        fontFamily: "lpmq",
+        fontFamily: "Amiri",
         fontWeight: FontWeight.w600,
         fontSize: 23,
         color: white,
       ),
       titleSmall: TextStyle(
         fontSize: 19,
-        fontFamily: 'lpmq',
+        fontFamily: 'Amiri',
         color: white,
       ),
     ),
@@ -81,13 +81,13 @@ class ThemeProvider extends ChangeNotifier {
     textTheme: const TextTheme(
       titleMedium: TextStyle(
         color: mainColor,
-        fontFamily: "lpmq",
+        fontFamily: "Amiri",
         fontWeight: FontWeight.w500,
         fontSize: 23,
       ),
       titleSmall: TextStyle(
         fontSize: 19,
-        fontFamily: 'lpmq',
+        fontFamily: 'Amiri',
         color: white,
       ),
     ),

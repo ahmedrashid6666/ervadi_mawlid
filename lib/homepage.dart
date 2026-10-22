@@ -114,7 +114,7 @@ class _MainScreenState extends State<MainScreen> {
                       style: TextStyle(
                           color: Theme.of(context).hintColor,
                           fontSize: 18,
-                          fontFamily: 'lpmq',
+                          fontFamily: 'Amiri',
                           fontWeight: FontWeight.w800),
                     ),
                     onTap: () => {
@@ -134,7 +134,7 @@ class _MainScreenState extends State<MainScreen> {
                       style: TextStyle(
                           color: Theme.of(context).hintColor,
                           fontSize: 18,
-                          fontFamily: 'lpmq',
+                          fontFamily: 'Uthmanic',
                           fontWeight: FontWeight.w800),
                     ),
                     onTap: () => {
@@ -153,7 +153,7 @@ class _MainScreenState extends State<MainScreen> {
                         style: TextStyle(
                             color: Theme.of(context).hintColor,
                             fontSize: 18,
-                            fontFamily: 'lpmq',
+                            fontFamily: 'NotoMalayalam',
                             fontWeight: FontWeight.w800),
                       ),
                       onTap: () {
@@ -171,7 +171,7 @@ class _MainScreenState extends State<MainScreen> {
                       style: TextStyle(
                           color: Theme.of(context).hintColor,
                           fontSize: 18,
-                          fontFamily: 'lpmq',
+                          fontFamily: 'NotoMalayalam',
                           fontWeight: FontWeight.w800),
                     ),
                     onTap: () {
@@ -573,7 +573,7 @@ Container Detailed1(
                           fontSize: screenWidth * 0.058,
                           fontWeight: FontWeight.w900,
                           color: isDark ? Colors.black : Colors.white,
-                          fontFamily: 'lpmq',
+                          fontFamily: 'Uthmanic',
                           letterSpacing: 0.5,
                         ),
                         textAlign: TextAlign.center,

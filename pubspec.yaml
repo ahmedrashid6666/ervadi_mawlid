@@ -94,6 +94,9 @@ flutter:
     - family: lpmq
       fonts:
         - asset: assets/fonts/lpmq.ttf
+    - family: NotoMalayalam
+      fonts:
+        - asset: assets/fonts/NotoSansMalayalam.ttf
     - family: Uthmanic
       fonts:
         - asset: assets/fonts/Uthmanic HAFS Regular.otf

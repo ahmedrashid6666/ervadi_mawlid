@@ -15,7 +15,7 @@ class AboutPage extends StatelessWidget {
         title: Text(
           'About Page',
           style: TextStyle(
-            fontFamily: 'lpmq',
+            fontFamily: 'NotoMalayalam',
             fontSize: 22,
           ),
           textDirection: TextDirection.ltr,

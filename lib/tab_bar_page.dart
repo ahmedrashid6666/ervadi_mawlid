@@ -600,49 +600,68 @@ class _tabsBarPageState extends State<tabsBarPage>
                                 );
                               },
                             ),
-                            const SizedBox(width: 8),
-                            // Share current baith as a designed PDF
-                            IconButton(
-                              padding: EdgeInsets.zero,
-                              constraints: const BoxConstraints(),
-                              iconSize: 26,
-                              icon: const Icon(
-                                Icons.picture_as_pdf_rounded,
-                                color: white,
-                                size: 26,
+                            const SizedBox(width: 4),
+                            // Keep these actions in fixed slots. Zero-size
+                            // IconButton constraints allowed their glyphs to
+                            // paint into each other's space on some screens.
+                            SizedBox(
+                              width: 44,
+                              height: 44,
+                              child: IconButton(
+                                tooltip: 'Share as PDF',
+                                padding: const EdgeInsets.all(9),
+                                icon: const Icon(
+                                  Icons.picture_as_pdf_rounded,
+                                  color: white,
+                                  size: 26,
+                                ),
+                                onPressed: _openPdfShare,
                               ),
-                              onPressed: _openPdfShare,
                             ),
-                            const SizedBox(width: 8),
-                            IconButton(
-                              padding: EdgeInsets.zero,
-                              constraints: const BoxConstraints(),
-                              iconSize: 28,
-                              icon: SvgPicture.asset(
-                                fontsz,
-                                height: 24,
-                                color: widget.isDarkTheme ? white : ltWhite,
-                                fit: BoxFit.fitHeight,
+                            SizedBox(
+                              width: 44,
+                              height: 44,
+                              child: IconButton(
+                                tooltip: 'Text size',
+                                padding: const EdgeInsets.all(8),
+                                icon: Container(
+                                  width: 27,
+                                  height: 27,
+                                  alignment: Alignment.center,
+                                  decoration: BoxDecoration(
+                                    border: Border.all(color: white, width: 2),
+                                    borderRadius: BorderRadius.circular(5),
+                                  ),
+                                  child: const Text(
+                                    'A',
+                                    style: TextStyle(
+                                      color: white,
+                                      fontSize: 19,
+                                      fontWeight: FontWeight.bold,
+                                      height: 1,
+                                    ),
+                                  ),
+                                ),
+                                onPressed: () {
+                                  showModalBottomSheet(
+                                    backgroundColor: trsnprnt,
+                                    useRootNavigator: true,
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return BottomModalSheet(
+                                        radiobtndark: widget.isDarkTheme,
+                                        isDarkTheme: widget.isDarkTheme,
+                                        fontsize: fontSize.fontSize,
+                                        onChanged: (double newValue) {
+                                          setState(() {
+                                            widget.textSize = newValue;
+                                          });
+                                        },
+                                      );
+                                    },
+                                  );
+                                },
                               ),
-                              onPressed: () {
-                                showModalBottomSheet(
-                                  backgroundColor: trsnprnt,
-                                  useRootNavigator: true,
-                                  context: context,
-                                  builder: (BuildContext context) {
-                                    return BottomModalSheet(
-                                      radiobtndark: widget.isDarkTheme,
-                                      isDarkTheme: widget.isDarkTheme,
-                                      fontsize: fontSize.fontSize,
-                                      onChanged: (double newValue) {
-                                        setState(() {
-                                          widget.textSize = newValue;
-                                        });
-                                      },
-                                    );
-                                  },
-                                );
-                              },
                             ),
                           ],
                         ),
@@ -969,7 +988,7 @@ class IconWithText extends StatelessWidget {
           Text(
             tabtext,
             style: TextStyle(
-              fontFamily: 'lpmq',
+              fontFamily: 'Amiri',
               fontSize: 18,
               color: isDarkTheme ? white : blk, // Now uses blk in light mode
             ),

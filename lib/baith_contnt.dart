@@ -334,6 +334,7 @@ class _BaithContntState extends State<BaithContnt> {
                     ? Colors.white70
                     : Theme.of(context).primaryColorDark,
                 fontSize: 16,
+                fontFamily: 'NotoMalayalam',
               ),
             ),
           ),

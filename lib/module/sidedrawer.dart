@@ -80,7 +80,7 @@ class _SidedrawerState extends State<Sidedrawer>
               title: Text(
                 'مُرَادِي بَيت',
                 style: TextStyle(
-                  fontFamily: 'lpmq',
+                  fontFamily: 'Amiri',
                   color: Theme.of(context).hintColor,
                   fontWeight: FontWeight.w600,
                   fontSize: 22,
@@ -106,7 +106,7 @@ class _SidedrawerState extends State<Sidedrawer>
               title: Text(
                 'أَيَا مَحْبُوب',
                 style: TextStyle(
-                  fontFamily: 'lpmq',
+                  fontFamily: 'Amiri',
                   color: Theme.of(context).hintColor,
                   fontWeight: FontWeight.w600,
                   fontSize: 22,
@@ -132,7 +132,7 @@ class _SidedrawerState extends State<Sidedrawer>
               title: Text(
                 'يٰا وَلِي سَلَامْ عَلَيْكُم',
                 style: TextStyle(
-                  fontFamily: 'lpmq',
+                  fontFamily: 'Amiri',
                   color: Theme.of(context).hintColor,
                   fontWeight: FontWeight.w600,
                   fontSize: 22,
@@ -158,7 +158,7 @@ class _SidedrawerState extends State<Sidedrawer>
               title: Text(
                 'أَيٰا سٰامِي لَدَى الْقٰادِرْ',
                 style: TextStyle(
-                  fontFamily: 'lpmq',
+                  fontFamily: 'Amiri',
                   color: Theme.of(context).hintColor,
                   fontWeight: FontWeight.w600,
                   fontSize: 22,
@@ -184,7 +184,7 @@ class _SidedrawerState extends State<Sidedrawer>
               title: Text(
                 'عَبَّاسْ مَنْترِي بَيت',
                 style: TextStyle(
-                  fontFamily: 'lpmq',
+                  fontFamily: 'Amiri',
                   color: Theme.of(context).hintColor,
                   fontWeight: FontWeight.w600,
                   fontSize: 22,
@@ -210,7 +210,7 @@ class _SidedrawerState extends State<Sidedrawer>
               title: Text(
                 'صَلٰوةٌ وَتَسْلِيمٌ',
                 style: TextStyle(
-                  fontFamily: 'lpmq',
+                  fontFamily: 'Amiri',
                   color: Theme.of(context).hintColor,
                   fontWeight: FontWeight.w600,
                   fontSize: 22,
@@ -236,7 +236,7 @@ class _SidedrawerState extends State<Sidedrawer>
               title: Text(
                 'دُعــــآء',
                 style: TextStyle(
-                  fontFamily: 'lpmq',
+                  fontFamily: 'Amiri',
                   color: Theme.of(context).hintColor,
                   fontWeight: FontWeight.w600,
                   fontSize: 22,
@@ -262,7 +262,7 @@ class _SidedrawerState extends State<Sidedrawer>
               title: Text(
                 'يَا أَكْرَمَ الْخَلْقِ',
                 style: TextStyle(
-                  fontFamily: 'lpmq',
+                  fontFamily: 'Amiri',
                   color: Theme.of(context).hintColor,
                   fontWeight: FontWeight.w600,
                   fontSize: 22,
@@ -288,7 +288,7 @@ class _SidedrawerState extends State<Sidedrawer>
               title: Text(
                 'وَاهًا لِلْقُبَّةِ الْخَضْرَاءِ',
                 style: TextStyle(
-                  fontFamily: 'lpmq',
+                  fontFamily: 'Amiri',
                   color: Theme.of(context).hintColor,
                   fontWeight: FontWeight.w600,
                   fontSize: 22,
